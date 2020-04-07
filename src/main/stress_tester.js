@@ -59,17 +59,15 @@ async function runApp() {
   // Set the start/stop button image to RELAX
   $("#muscleButton").attr('src',RELAX_SRC);
 
-  // Display a "working..." message on the page so the user knows
+  // Display a "Initializing..." message on the page so the user knows
   // They can't start generating TXs yet
-  $("#statusMessage").html("working...");
+  $("#statusMessage").html("Initializing...");
 
   // bool to track whether the stress test loop is running
   // This will help us know which muscle button animation to play
   // and whether to send a "start" or "stop" stignal to the
   // generator
   let isTestRunning = false;
-
-  $("#wallet_balance").text("Wallet balance: Initializing...");
 
   // connect to daemon
   let daemonConnection = new MoneroRpcConnection({uri: DAEMON_RPC_URI, user: DAEMON_RPC_USERNAME, pass: DAEMON_RPC_PASSWORD});
@@ -86,44 +84,34 @@ async function runApp() {
   let walletAddressLine1 = walletAddress.substring(0,walletAddress.length/2);
   let walletAddressLine2 = walletAddress.substring(walletAddress.length/2);
   //Display wallet address on page
-  $("#walletAddress").html(walletAddressLine1 + "<br/>" + walletAddressLine2);
+  $("#walletAddress").html(walletAddressLine1 + "<br/>" + walletAddressLine2);  // TODO: this will split address for copy/paste, should use max width and auto line wrap
 
   console.log("Core wallet imported mnemonic: " + await wallet.getMnemonic());
   console.log("Core wallet imported address: " + walletAddress);
 
   // synchronize wallet
-    $("#statusMessage").html("Syncronizing core wallet...");
+  $("#statusMessage").html("Synchronizing wallet...");
   let result = await wallet.sync(new WalletSyncPrinter());  // synchronize and print progress
-  $("#statusMessage").html("Done syncing. Result: " + result);
-    $("#statusMessage").html("working...");
 
-  // print balance and number of transactions
+  // render balances
   console.log("Core wallet balance: " + await wallet.getBalance());
-
-  /* commented out; currently does nothing
-  // receive notifications when outputs are spent
-  await wallet.addListener(new class extends MoneroWalletListener {
-    onOutputSpent(output) {
-      console.log("Output spent: " + output);
-      // todo: get amount spent to add it to the total
-      // (can we get the fee from the output object too?)
-    }
-  });
-  */
+  $("#walletBalance").html(atomicUnitsToDecimalString(await wallet.getBalance()));
+  $("#walletAvailableBalance").html(atomicUnitsToDecimalString(await wallet.getUnlockedBalance()));
 
   // start background syncing
   await wallet.startSyncing();
 
   // instantiate a transaction generator
   let txGenerator = new MoneroTxGenerator(daemon, wallet);
-    $("#statusMessage").html("Ready to stress the system!");
 
   // send a listener to the txGenerator so we can respond to transaction events
   // and be provided with transaction data
-  txGenerator.addTransactionListener((tx) => {
+  txGenerator.addTransactionListener(async function(tx) {
     console.log("Running transaction listener callback");
     $("#txTotal").html(txGenerator.getNumTxsGenerated());
-    $("#feeTotal").html(atomicUnitsToDecimalString(txGenerator.getTotalFee()));
+    $("#walletBalance").html(atomicUnitsToDecimalString(await wallet.getBalance()) + " XMR");
+    $("#walletAvailableBalance").html(atomicUnitsToDecimalString(await wallet.getUnlockedBalance()) + " XMR");
+    $("#feeTotal").html(atomicUnitsToDecimalString(txGenerator.getTotalFee()) + " XMR");
   });
 
   // give start/stop control over transaction generator to the muscle button
@@ -138,8 +126,9 @@ async function runApp() {
       $("#muscleButton").attr('src',FLEX_SRC);
       await txGenerator.start();
 	}
-  })
+  });
 
+  $("#statusMessage").html("Ready to stress the system!");
 }
 
 /**
