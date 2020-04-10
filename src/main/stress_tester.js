@@ -4,6 +4,7 @@
 
 // import dependencies
 require("monero-javascript");
+const https = require("https");
 const MoneroTxGenerator = require("./MoneroTxGenerator");
 
 // configuration
@@ -21,11 +22,13 @@ const FS = USE_FS ? require('memfs') : undefined;  // use in-memory file system 
 const FLEX_SRC = "img/muscleFlex.gif";
 const RELAX_SRC = "img/muscleRelax.gif";
 
+// URL for the http request go obtain the xmr/usd conversion factor
+const COINGECKO_API_REQUEST_URL = "https://api.coingecko.com/api/v3/simple/price?ids=monero&vs_currencies=usd";
+
 // Math constants
 const AU_PER_XMR = 1000000000000;
 
-//Hepler function to convert bigInt in atomic units to decimal representation
-function atomicUnitsToDecimalString(aUAmount) {
+function atomicUnitsToDecimal(aUAmount) {
   console.log("Testing the BigInteger value: " + aUAmount.toString());
   // Get a two-dimensional array containing the quotient and remainder of the result of 
   // dividing the fee in atomic units by the number of atomic units in one XMR
@@ -38,12 +41,40 @@ function atomicUnitsToDecimalString(aUAmount) {
   // Divide remainder by AU_PER_XMR
   quotientAndRemainder[1] = quotientAndRemainder[1] / AU_PER_XMR;
 
-  // Convert result to a string for display
-  let stringRepresentation = (quotientAndRemainder[0]+quotientAndRemainder[1]).toString();
-  console.log("AU to convert: " + aUAmount.toString());
-  console.log("decimal string: " + stringRepresentation);
+  // Return the sum of the whole number and decimal fraction of XMR
+  return quotientAndRemainder[0] + quotientAndRemainder[1];
+}
 
-  return stringRepresentation;    
+
+
+
+//TODO: rewrite this function (and related code in this file) to follow this synchronus request model:
+// https://usefulangle.com/post/170/nodejs-synchronous-http-request
+
+
+
+
+
+async function requestXmrToUsdRate(){
+  https.get(COINGECKO_API_REQUEST_URL, (response) => {
+  let res = '';
+
+  // called when a data chunk is received.
+  response.on('data', (chunk) => {
+    res += chunk;
+  });
+
+  // called when the complete response is received.
+  response.on('end', () => {
+    //convert response data into a usable JSON object
+    res = JSON.parse(res);
+    console.log("XMR/USD value: " + res.monero.usd);
+    return res.monero.usd
+  });
+
+}).on("error", (error) => {
+  console.log("Error: " + error.message);
+});
 }
 
 // Run application on main thread.
@@ -95,8 +126,8 @@ async function runApp() {
 
   // render balances
   console.log("Core wallet balance: " + await wallet.getBalance());
-  $("#walletBalance").html(atomicUnitsToDecimalString(await wallet.getBalance()));
-  $("#walletAvailableBalance").html(atomicUnitsToDecimalString(await wallet.getUnlockedBalance()));
+  $("#walletBalance").html(atomicUnitsToDecimal(await wallet.getBalance()).toString());
+  $("#walletAvailableBalance").html(atomicUnitsToDecimal(await wallet.getUnlockedBalance()).toString());
 
   // start background syncing
   await wallet.startSyncing();
@@ -109,9 +140,19 @@ async function runApp() {
   txGenerator.addTransactionListener(async function(tx) {
     console.log("Running transaction listener callback");
     $("#txTotal").html(txGenerator.getNumTxsGenerated());
-    $("#walletBalance").html(atomicUnitsToDecimalString(await wallet.getBalance()) + " XMR");
-    $("#walletAvailableBalance").html(atomicUnitsToDecimalString(await wallet.getUnlockedBalance()) + " XMR");
-    $("#feeTotal").html(atomicUnitsToDecimalString(txGenerator.getTotalFee()) + " XMR");
+    $("#walletBalance").html(atomicUnitsToDecimal(await wallet.getBalance()).toString() + " XMR");
+    $("#walletAvailableBalance").html(atomicUnitsToDecimal(await wallet.getUnlockedBalance()).toString() + " XMR");
+    //Get the total fee from MoneroTxGenerator
+    let feeTotal = atomicUnitsToDecimal(txGenerator.getTotalFee());
+    console.log("feeTotal: " + feeTotal.toString());
+    let xmrToUsdConversionRate = await requestXmrToUsdRate(feeTotal);
+    console.log("xmr/usd conversion rate: " + xmrToUsdConversionRate.toString());
+    let feeTotalUSD = feeTotal / xmrToUsdConversionRate;
+    console.log("feeTotalUSD: " + feeTotalUSD.toString());
+    let feeTotalString = feeTotal.toString() + " XMR / " + feeTotalUSD.toString() + " USD";
+    $("#feeTotal").html(feeTotalString);
+    //And... show the feeTotal in USD!
+    $("#feeTotalInUSD").html((feeTotal / requestXmrToUsdRate(feeTotal)).toString());
   });
 
   // give start/stop control over transaction generator to the muscle button
