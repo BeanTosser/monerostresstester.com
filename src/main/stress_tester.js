@@ -22,11 +22,119 @@ const FS = USE_FS ? require('memfs') : undefined;  // use in-memory file system 
 const FLEX_SRC = "img/muscleFlex.gif";
 const RELAX_SRC = "img/muscleRelax.gif";
 
-// URL for the http request go obtain the xmr/usd conversion factor
-const COINGECKO_API_REQUEST_URL = "https://api.coingecko.com/api/v3/simple/price?ids=monero&vs_currencies=usd";
+
+// --- Coingecko API query constants ---
+
+// Just the URL of the api
+const COINGECKO_API_REQUEST_URL_WO = "https://api.coingecko.com/api/v3/simple/";
+// The query method
+const COINGECKO_API_REQUEST_NAME = 'price';
+// JS object containing the parameters
+const COINGECKO_API_REQUEST_PARAMS = {
+	ids: "monero",
+	vs_currencies: "usd"
+}
 
 // Math constants
 const AU_PER_XMR = 1000000000000;
+
+var xmrToUSDConversionRate;
+
+// Define a class for scheduling API queries at regular intervals (to be extracted to separate file)
+// Constructor takes:
+//   -- queryInterval (integer): The time to wait between api queries in milliseconds
+//   -- url (String): the url location of the API
+//   -- params (object): a javascript object containing the query parameters
+//   -- callback (function): a function with one input variable
+//      representing a JSON response from the api
+// ---
+class HttpsApiIntervalQuery {
+	// Object vars:
+	//   queryInterval
+	//   requestString
+	//   callback
+	//   intervalHandle
+	
+	constructor(queryInterval, url, name, params, callback) {
+		this.queryInterval = queryInterval;
+		this.callback = callback;
+		
+		// The supplied callback should be a function with one input variable
+		// representing a JSON response from the api
+		this.callback = callback;
+		
+		//Start building the api request string
+		this.requestString = url + name + "?";
+		
+		// Stringify the JSON params and break down into individual param/value pairs
+		let stringParams = JSON.stringify(params);
+		
+		// Remove braces and quotes from string
+		let requestParamsString = stringParams.replace(/[{}"]/g, "");
+		
+		// Create an array of strings. Each string contains a paramater/value pair
+		let individualRequestParamPairs = requestParamsString.split(",");
+		console.log("individualRequestParamPairs: " + individualRequestParamPairs);
+		
+		// Iterate through the parameter/value pairs to assemble the final API request string
+		for(var i = 0; i < individualRequestParamPairs.length; i++) {
+			// create an array where element 0 contains the parameter name and
+			// element 1 contains the parameter value
+			let pair = individualRequestParamPairs[i].split(":");
+			// Insert an "=" between the parameter/value pair and add the result to the request string
+			this.requestString += pair[0] + '=' + pair[1];
+			
+			// If we haven't reached the last parameter pair, add the "&" 
+			// separator between this pair and the next in the string
+			if (i < individualRequestParamPairs.length - 1) {
+				this.requestString += "&";
+			}
+		}
+	}
+	
+	setInterval(newInterval) {
+		this.queryInterval = newInterval;
+		this.start();
+	}
+	
+	// Stop making the regular API request
+	stop() {
+		clearInterval(this.intervalHandle);
+	}
+	
+	// Start running the API request
+	start() {
+		this.intervalHandle = setInterval(this.sendRequestAndCallBack.bind(this), this.queryInterval);
+	}
+	
+	getInterval() {
+		return this.queryInterval;
+	}
+	
+	getRequestString() {
+		return this.requestString;
+	}
+	
+	sendRequestAndCallBack() {
+		https.get(this.requestString, (response) => {
+			let data = [];
+		
+			response.on('data', (dataFragment) => {
+				data += dataFragment;
+			});
+		
+			response.on('end', () => {
+				this.callback(data);
+			});
+		
+			response.on('error', (error) => {
+				console.log(error);
+			});
+		});
+	}
+	
+	
+}
 
 function atomicUnitsToDecimal(aUAmount) {
   console.log("Testing the BigInteger value: " + aUAmount.toString());
@@ -85,6 +193,18 @@ if (isMain) runApp();
  * Run the application.
  */
 async function runApp() {
+
+  // Create an Https Api interval query
+  // Run the API query every 10 seconds (10000 milliseconds)
+  let intervalQuery = new HttpsApiIntervalQuery(10000, COINGECKO_API_REQUEST_URL_WO, COINGECKO_API_REQUEST_NAME, COINGECKO_API_REQUEST_PARAMS, (response) => {
+	xmrToUSDConversionRate = JSON.parse(response).monero.usd;
+
+  });
+
+  //Test the query
+  console.log("Starting the interval query");
+  intervalQuery.start();
+
   console.log("APPLICATION START");
 
   // Set the start/stop button image to RELAX
@@ -143,16 +263,16 @@ async function runApp() {
     $("#walletBalance").html(atomicUnitsToDecimal(await wallet.getBalance()).toString() + " XMR");
     $("#walletAvailableBalance").html(atomicUnitsToDecimal(await wallet.getUnlockedBalance()).toString() + " XMR");
     //Get the total fee from MoneroTxGenerator
-    let feeTotal = atomicUnitsToDecimal(txGenerator.getTotalFee());
+    let feeTotalXMR = atomicUnitsToDecimal(txGenerator.getTotalFee());
     console.log("feeTotal: " + feeTotal.toString());
-    let xmrToUsdConversionRate = await requestXmrToUsdRate(feeTotal);
-    console.log("xmr/usd conversion rate: " + xmrToUsdConversionRate.toString());
-    let feeTotalUSD = feeTotal / xmrToUsdConversionRate;
+    let feeTotalUSD = feeTotalXMR * xmrToUSDConversionRate;
+
+    // round the fee to two decimal places
+    feeTotalUSD = Math.round((feeTotalUSD + Number.EPSILON) * 100) / 100;
     console.log("feeTotalUSD: " + feeTotalUSD.toString());
-    let feeTotalString = feeTotal.toString() + " XMR / " + feeTotalUSD.toString() + " USD";
-    $("#feeTotal").html(feeTotalString);
-    //And... show the feeTotal in USD!
-    $("#feeTotalInUSD").html((feeTotal / requestXmrToUsdRate(feeTotal)).toString());
+
+    $("#feeTotalXMR").html(feeTotalXMR.toString() + " XMR");
+    $("#feeTotalUSD").html("$" + feeTotalUSD.toString());
   });
 
   // give start/stop control over transaction generator to the muscle button

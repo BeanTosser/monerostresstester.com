@@ -50,6 +50,10 @@ td {
 	background-color: red;
 }
 
+#feeTotalUSD {
+	text-align: left;
+}
+
 body {
 	position: fixed;
 	left: 50%;
