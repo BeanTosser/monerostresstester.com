@@ -4,8 +4,8 @@
 
 // import dependencies
 require("monero-javascript");
-const https = require("https");
 const MoneroTxGenerator = require("./MoneroTxGenerator");
+const HttpsApiIntervalQuery = require("./HttpsApiIntervalQuery");
 
 // configuration
 const DAEMON_RPC_URI = "http://localhost:38081";
@@ -28,7 +28,7 @@ const RELAX_SRC = "img/muscleRelax.gif";
 // Just the URL of the api
 const COINGECKO_API_REQUEST_URL_WO = "https://api.coingecko.com/api/v3/simple/";
 // The query method
-const COINGECKO_API_REQUEST_NAME = 'price';
+const COINGECKO_API_REQUEST_METHOD = 'price';
 // JS object containing the parameters
 const COINGECKO_API_REQUEST_PARAMS = {
 	ids: "monero",
@@ -48,93 +48,6 @@ var xmrToUSDConversionRate;
 //   -- callback (function): a function with one input variable
 //      representing a JSON response from the api
 // ---
-class HttpsApiIntervalQuery {
-	// Object vars:
-	//   queryInterval
-	//   requestString
-	//   callback
-	//   intervalHandle
-	
-	constructor(queryInterval, url, name, params, callback) {
-		this.queryInterval = queryInterval;
-		this.callback = callback;
-		
-		// The supplied callback should be a function with one input variable
-		// representing a JSON response from the api
-		this.callback = callback;
-		
-		//Start building the api request string
-		this.requestString = url + name + "?";
-		
-		// Stringify the JSON params and break down into individual param/value pairs
-		let stringParams = JSON.stringify(params);
-		
-		// Remove braces and quotes from string
-		let requestParamsString = stringParams.replace(/[{}"]/g, "");
-		
-		// Create an array of strings. Each string contains a paramater/value pair
-		let individualRequestParamPairs = requestParamsString.split(",");
-		console.log("individualRequestParamPairs: " + individualRequestParamPairs);
-		
-		// Iterate through the parameter/value pairs to assemble the final API request string
-		for(var i = 0; i < individualRequestParamPairs.length; i++) {
-			// create an array where element 0 contains the parameter name and
-			// element 1 contains the parameter value
-			let pair = individualRequestParamPairs[i].split(":");
-			// Insert an "=" between the parameter/value pair and add the result to the request string
-			this.requestString += pair[0] + '=' + pair[1];
-			
-			// If we haven't reached the last parameter pair, add the "&" 
-			// separator between this pair and the next in the string
-			if (i < individualRequestParamPairs.length - 1) {
-				this.requestString += "&";
-			}
-		}
-	}
-	
-	setInterval(newInterval) {
-		this.queryInterval = newInterval;
-		this.start();
-	}
-	
-	// Stop making the regular API request
-	stop() {
-		clearInterval(this.intervalHandle);
-	}
-	
-	// Start running the API request
-	start() {
-		this.intervalHandle = setInterval(this.sendRequestAndCallBack.bind(this), this.queryInterval);
-	}
-	
-	getInterval() {
-		return this.queryInterval;
-	}
-	
-	getRequestString() {
-		return this.requestString;
-	}
-	
-	sendRequestAndCallBack() {
-		https.get(this.requestString, (response) => {
-			let data = [];
-		
-			response.on('data', (dataFragment) => {
-				data += dataFragment;
-			});
-		
-			response.on('end', () => {
-				this.callback(data);
-			});
-		
-			response.on('error', (error) => {
-				console.log(error);
-			});
-		});
-	}
-	
-	
-}
 
 function atomicUnitsToDecimal(aUAmount) {
   console.log("Testing the BigInteger value: " + aUAmount.toString());
@@ -153,38 +66,6 @@ function atomicUnitsToDecimal(aUAmount) {
   return quotientAndRemainder[0] + quotientAndRemainder[1];
 }
 
-
-
-
-//TODO: rewrite this function (and related code in this file) to follow this synchronus request model:
-// https://usefulangle.com/post/170/nodejs-synchronous-http-request
-
-
-
-
-
-async function requestXmrToUsdRate(){
-  https.get(COINGECKO_API_REQUEST_URL, (response) => {
-  let res = '';
-
-  // called when a data chunk is received.
-  response.on('data', (chunk) => {
-    res += chunk;
-  });
-
-  // called when the complete response is received.
-  response.on('end', () => {
-    //convert response data into a usable JSON object
-    res = JSON.parse(res);
-    console.log("XMR/USD value: " + res.monero.usd);
-    return res.monero.usd
-  });
-
-}).on("error", (error) => {
-  console.log("Error: " + error.message);
-});
-}
-
 // Run application on main thread.
 let isMain = self.document? true : false;
 if (isMain) runApp();
@@ -196,7 +77,7 @@ async function runApp() {
 
   // Create an Https Api interval query
   // Run the API query every 10 seconds (10000 milliseconds)
-  let intervalQuery = new HttpsApiIntervalQuery(10000, COINGECKO_API_REQUEST_URL_WO, COINGECKO_API_REQUEST_NAME, COINGECKO_API_REQUEST_PARAMS, (response) => {
+  let intervalQuery = new HttpsApiIntervalQuery(10000, COINGECKO_API_REQUEST_URL_WO, COINGECKO_API_REQUEST_METHOD, COINGECKO_API_REQUEST_PARAMS, (response) => {
 	xmrToUSDConversionRate = JSON.parse(response).monero.usd;
 
   });
