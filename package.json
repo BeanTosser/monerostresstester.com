@@ -26,23 +26,30 @@
   },
   "homepage": "https://github.com/woodser/monerostresstester#readme",
   "dependencies": {
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^3.6.0",
     "jquery": "^3.5.0",
-    "monero-javascript": "^0.4.0"
+    "monero-javascript": "^0.4.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.10.3",
+    "@babel/preset-react": "^7.10.1",
+    "acorn": "^6.4.1",
     "babel-core": "6.26.3",
     "babel-loader": "8.0.2",
     "babel-minify": "0.4.3",
+    "chai": "^4.2.0",
     "electron": "3.0.3",
     "eslint": "5.6.0",
     "memfs": "^3.0.4",
+    "minimist": "^1.2.2",
+    "mocha": "^7.0.1",
+    "style-loader": "^1.2.1",
     "webpack": "^4.41.3",
     "webpack-cli": "3.1.0",
     "webpack-merge": "4.1.4",
-    "worker-loader": "2.0.0",
-    "chai": "^4.2.0",
-    "mocha": "^7.0.1",
-    "minimist": "^1.2.2",
-    "acorn": "^6.4.1"
+    "worker-loader": "2.0.0"
   }
 }

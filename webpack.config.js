@@ -11,7 +11,7 @@ let configBase = {
 //          exclude: path.join(__dirname, 'node_modules')
 //        },
         {
-          test: /\.js$/,
+          test: /\.(js|jsx)$/,
           exclude: path.join(__dirname, 'node_modules'),
           type: "javascript/auto",
           use: [
@@ -25,7 +25,14 @@ let configBase = {
               }
             }
           ]
-        }
+        },
+        {
+          // Preprocess your css files
+          // you can add additional loaders here (e.g. sass/less etc.)
+          test: /\.css$/,
+          exclude: /node_modules/,
+          use: ['style-loader', 'css-loader'],
+        },
       ]
     },
     devtool: 'source-map',
@@ -35,7 +42,7 @@ let configBase = {
       alias: {
         "fs": "html5-fs"
       },
-      extensions: ['.js', '.jsx', '.css', '.json', 'otf', 'ttf', 'eot', 'svg'],
+      extensions: ['*', '.js', '.jsx', '.css', '.json', 'otf', 'ttf', 'eot', 'svg'],
       modules: [
         'node_modules'
       ]
