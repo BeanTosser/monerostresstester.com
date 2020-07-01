@@ -1,6 +1,5 @@
 const path = require("path");
 var webpack = require('webpack');
-//const fileLoader = require("file-loader");
 
 let configBase = {
     module: {
@@ -10,14 +9,6 @@ let configBase = {
 //          loader: "file-loader",
 //          exclude: path.join(__dirname, 'node_modules')
 //        },
-        {
-        test: /\.(png|jpeg|gif)$/i,
-          use: [
-            {
-              loader: 'file-loader',
-            },
-          ],
-        },
         {
           test: /\.(js|jsx)$/,
           exclude: path.join(__dirname, 'node_modules'),
@@ -56,13 +47,7 @@ let configBase = {
       ]
     },
     cache: true,
-    context: __dirname,
-    plugins: [
-      new webpack.ProvidePlugin({
-        '$': 'jquery',
-        jQuery: 'jquery'
-      })
-    ]
+    context: __dirname
 };
 
 let configStressTester = Object.assign({}, configBase, {
