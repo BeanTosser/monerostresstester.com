@@ -11,6 +11,14 @@ let configBase = {
 //          exclude: path.join(__dirname, 'node_modules')
 //        },
         {
+        test: /\.(png|jpeg|gif)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+            },
+          ],
+        },
+        {
           test: /\.(js|jsx)$/,
           exclude: path.join(__dirname, 'node_modules'),
           type: "javascript/auto",
