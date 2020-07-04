@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import "./App.css";
 import Banner from "./components/Banner.js";
+import Home from "./components/Home.js";
 
 class App extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class App extends React.Component {
     return(
       <div id="app_container">
         <Banner />
+        <Home />
       </div>
     );
   }
