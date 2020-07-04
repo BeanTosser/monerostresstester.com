@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-export default function Home(){
+export default function Deposit(){
   return(
     <>
-      <h1>Home</h1>
+      <h1>Deposit</h1>
     </>
   );
 }
