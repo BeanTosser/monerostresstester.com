@@ -23,12 +23,6 @@
   font-family: var(--banner-font);
 }
 
-a {
-  font-weight: normal;
-  text-decoration: none;
-  margin-right:5px;
-  margin-left: 5px;
-}
 .vertical_center {
   position: absolute;
   margin: 0;
@@ -59,13 +53,19 @@ h1 {
   margin-left: var(--h1-horizontal-offset);
 }
 
-.nav_link {
-  color: white;
+a {
+  color: yellow;
   font-size: var(--nav-font-size);
+  font-weight: bold;
+  text-decoration: none;
+  margin-right:5px;
+  margin-left: 5px;
+  font-family: var(--banner-font);
 }
 
 .current_nav {
   font-weight: bold;
+  text-decoration: underline;
 }
 
 .unselected_nav {
