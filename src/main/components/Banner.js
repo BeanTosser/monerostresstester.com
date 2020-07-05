@@ -14,7 +14,7 @@ export default function Banner(props) {
         </div>
       </div>
       <div id="nav">
-        <NavLink to="/" className="nav_link" activeClassName="current_nav">Home</NavLink>
+        <NavLink to="/home" className="nav_link" activeClassName="current_nav">Home</NavLink>
         &nbsp;|&nbsp;
         <NavLink to="/backup" className="nav_link" activeClassName="current_nav">Backup</NavLink>
         &nbsp;|&nbsp;

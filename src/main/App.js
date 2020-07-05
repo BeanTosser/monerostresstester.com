@@ -19,7 +19,7 @@ class App extends React.Component {
       <div id="app_container">
         <Router>
           <Banner />
-          <Route path="/" render={() => <Home />} />
+          <Route path="/home" render={() => <Home />} />
           <Route path="/deposit" render={() => <Deposit />} />
           <Route path="/signOut" render={() => <SignOut />} />
           <Route path="/backup" render={() => <Backup />} />
