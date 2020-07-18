@@ -14,6 +14,35 @@ import { BrowserRouter as Router, Route, NavLink, Switch} from "react-router-dom
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      walletPhrase: "",
+      phraseIsConfirmed: false
+    };
+  }
+
+  generateWallet(){
+    alert("Attempting to regenerate phrase");
+    let newPhrase = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 100);
+    alert("newPhrase: " + newPhrase);
+    this.setState ({
+      walletPhrase: newPhrase
+    });
+  }
+
+  deleteWallet() {
+    alert("Deleting wallet");
+    this.setState ({
+      walletPhrase: "",
+      phraseIsConfirmed: false
+    })
+  }
+
+  confirmWallet() {
+    alert("Confirming wallet");
+    this.setState ({
+      phraseIsConfirmed: true
+    })
   }
 
   render(){
@@ -22,7 +51,12 @@ class App extends React.Component {
         <Router>
           <Banner />
           <Switch>
-            <Route path="/" exact render={() => <Home />} />
+            <Route path="/" exact render={() => <Home
+              walletPhrase={this.state.walletPhrase}
+              generateWallet={this.generateWallet.bind(this)}
+              confirmWallet={this.confirmWallet.bind(this)}
+              deleteWallet={this.deleteWallet.bind(this)}
+            />} />
             <Route path="/deposit" render={() => <Deposit />} />
             <Route path="/signOut" render={() => <SignOut />} />
             <Route path="/backup" render={() => <Backup />} />
