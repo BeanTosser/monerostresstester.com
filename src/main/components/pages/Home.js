@@ -24,13 +24,13 @@ export default function Home(props){
           <Route path="/" exact render={() => <Welcome
             handleContinue={props.generateWallet}/>} />
           <Route path="/new_wallet" render={() => <New_Wallet
-            text={props.new_wallet_phrase}
+            text={props.walletPhrase}
             handleRegenerate={props.generateWallet}
             handleBack={props.deleteWallet}/>}
           />
           <Route path="/import_wallet" render={() => <Import_Wallet />} />
           <Route path="/confirm_phrase" render={() => <Confirm_Phrase
-            text={props.confirmWalletPhrase}
+            text={props.walletPhrase}
             defaultEntryString={DEFAULT_BACKUP_PHRASE_STRING}
             handleContinue={props.handleConfirm} />}
           />
