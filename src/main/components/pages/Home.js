@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './home.css';
 import {Route, Switch, Link, useRouteMatch} from "react-router-dom";
 import {UI_Button_Link, UI_Text_Link, Regenerate_Phrase_Button} from '../Buttons.js';
-import {Page_Box, Page_Text_Box, Page_Text_Entry, Header} from '../Widgets.js';
+import {Page_Box, Page_Text_Box, Page_Text_Entry, Header, Progress_Bar} from '../Widgets.js';
 
 const DEFAULT_BACKUP_PHRASE_STRING = "Enter backup phrase";
 
@@ -32,6 +32,9 @@ export default function Home(props){
           text={walletPhrase}
           defaultEntryString={DEFAULT_BACKUP_PHRASE_STRING}
           handleContinue={handleConfirm}
+        /> } />
+        <Route path={`${path}/synchronize_wallet`} render={(props) => <Sync_Wallet_Page
+          {...props}
         /> } />
       </Switch>
     </div>
@@ -65,6 +68,16 @@ function New_Wallet(props) {
   );
 }
 
+function Sync_Wallet_Page(props) {
+  return (
+    <Page_Box>
+    <Header text="Synchronizing Wallet" />
+    <Progress_Bar />
+    <UI_Text_Link link_text="Go Back" destination="/home"/>
+    </Page_Box>
+  );
+}
+
 function Enter_Phrase_Page(props) {
   //Save your backup phrase
   return(
@@ -72,7 +85,7 @@ function Enter_Phrase_Page(props) {
       <Header text={props.header}/>
       <Page_Text_Entry isDefault={true} value="Enter backup phrase..."/>
       <div className="save_phrase_box_bottom_margin"></div>
-      <UI_Button_Link link_text="Continue" destination={"/syncronize_wallet"} handleClick={props.handleContinue}/>
+      <UI_Button_Link link_text="Continue" destination={"/home/synchronize_wallet"} handleClick={props.handleContinue}/>
       <UI_Text_Link link_text="Or Go Back" destination={props.back_destination} handleClick={props.handleBack} />
     </Page_Box>
   );

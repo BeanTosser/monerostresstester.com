@@ -2,6 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './widgets.css';
 
+export function Progress_Bar(props) {
+  return(
+    <div className="progress_bar_container main_content">
+      <div className="progress_bar"></div>
+    </div>
+  );
+}
+
 // A generic container for the common "box format" of most of the home sub-pages
 export function Page_Box(props) {
   return (

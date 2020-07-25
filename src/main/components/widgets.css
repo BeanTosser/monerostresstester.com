@@ -70,3 +70,21 @@
   background-color: #dddddd;
   line-height: 41px;
 }
+
+.progress_bar_container {
+  background-color: inherit;
+  height: 100px;
+  width: 800px;
+}
+
+/* The animation code */
+@keyframes progress_bar {
+ from {background-color: red;}
+ to {background-color: green;}
+}
+
+.progress_bar {
+  height: inherit;
+  animation-name: progress-bar;
+  animation-duration: 5s;
+}
