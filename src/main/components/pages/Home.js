@@ -78,10 +78,11 @@ function Sync_Wallet_Page(props) {
     <Page_Box>
     <Header text="Synchronizing Wallet" />
     <Progress_Bar progress={props.progress}/>
-    <UI_Text_Link link_text="Go Back" onClick={() => {
-            alert("going back");
-      history.goBack()
-    }}/>
+    <UI_Text_Link link_text="Go Back"
+      handleClick={() => {
+        props.history.goBack();
+      }}
+    />
     </Page_Box>
   );
 }

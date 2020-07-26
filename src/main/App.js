@@ -44,7 +44,8 @@ class App extends React.Component {
     alert("Deleting wallet");
     this.setState ({
       walletPhrase: "",
-      phraseIsConfirmed: false
+      phraseIsConfirmed: false,
+      walletSyncProgress: 0
     })
   }
 
