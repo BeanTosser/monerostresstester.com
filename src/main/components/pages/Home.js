@@ -14,6 +14,7 @@ export default function Home(props){
   let deleteWallet = props.deleteWallet;
   let walletPhrase = props.walletPhrase;
   let handleConfirm = props.handleConfirm;
+  let walletSyncProgress = props.walletSyncProgress;
   return (
     <div id="home">
       <Switch>
@@ -26,7 +27,10 @@ export default function Home(props){
           handleRegenerate={generateWallet}
           handleBack={deleteWallet}
         />} />
-        <Route path={`${path}/import_wallet`} component={Import_Wallet} />
+        <Route path={`${path}/import_wallet`}
+          component={Import_Wallet}
+          handleContinue={handleConfirm}
+        />
         <Route path={`${path}/confirm_phrase`} render={(props) => <Confirm_Phrase
           {...props}
           text={walletPhrase}
@@ -35,6 +39,7 @@ export default function Home(props){
         /> } />
         <Route path={`${path}/synchronize_wallet`} render={(props) => <Sync_Wallet_Page
           {...props}
+          progress={walletSyncProgress}
         /> } />
       </Switch>
     </div>
@@ -72,8 +77,11 @@ function Sync_Wallet_Page(props) {
   return (
     <Page_Box>
     <Header text="Synchronizing Wallet" />
-    <Progress_Bar />
-    <UI_Text_Link link_text="Go Back" destination="/home"/>
+    <Progress_Bar progress={props.progress}/>
+    <UI_Text_Link link_text="Go Back" onClick={() => {
+            alert("going back");
+      history.goBack()
+    }}/>
     </Page_Box>
   );
 }
@@ -94,13 +102,13 @@ function Enter_Phrase_Page(props) {
 function Confirm_Phrase(props) {
   //Save your backup phrase
   return(
-    <Enter_Phrase_Page header="Confirm your backup phrase" back_destination={`/home/new_wallet`} />
+    <Enter_Phrase_Page header="Confirm your backup phrase" back_destination={`/home/new_wallet`} handleContinue={props.handleContinue}/>
   );
 }
 
 function Import_Wallet(props) {
   return(
-    <Enter_Phrase_Page header="Enter your backup phrase" back_destination='/home' />
+    <Enter_Phrase_Page header="Enter your backup phrase" back_destination='/home' handleContinue={props.handleContinue}/>
   );
 }
 

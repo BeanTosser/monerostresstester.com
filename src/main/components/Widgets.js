@@ -3,9 +3,13 @@ import ReactDOM from 'react-dom';
 import './widgets.css';
 
 export function Progress_Bar(props) {
+  const progressStyle = {
+    width: `${props.progress}%`
+  }
   return(
     <div className="progress_bar_container main_content">
-      <div className="progress_bar"></div>
+      <div className="progress_bar" style={progressStyle}></div>
+      <div className="progress_percentage">{`${props.progress}%`}</div>
     </div>
   );
 }

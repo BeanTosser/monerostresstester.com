@@ -10,14 +10,26 @@ import Backup from "./components/pages/Backup.js";
 import Withdraw from "./components/pages/Withdraw.js";
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 
+//TEMPORARY values for testing the progress bar
+const TEST_SYNC_UPDATE_INTERVAL = 0.1;
+const TEST_SYNC_TIMER_INTERVAL = 20;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       walletPhrase: "",
-      phraseIsConfirmed: false
+      phraseIsConfirmed: false,
+      walletSyncProgress: 0
     };
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   generateWallet(){
@@ -42,6 +54,21 @@ class App extends React.Component {
       phraseIsConfirmed: true
     })
   }
+  //Called when the user clicks "continue" after entering a valid new (for restore) or confirm (for create new) seed phrase.
+  synchronizeWallet() {
+    this.timer = setInterval(this.updateSyncProgress.bind(this), TEST_SYNC_TIMER_INTERVAL);
+  }
+  updateSyncProgress() {
+    if(this._isMounted){
+      if(this.state.walletSyncProgress < 100) {
+        this.setState((state) => ({
+          walletSyncProgress: state.walletSyncProgress + TEST_SYNC_UPDATE_INTERVAL
+        }));
+      } else {
+        clearInterval(this.timer);
+      }
+    }
+  }
 
   render(){
     return(
@@ -60,6 +87,8 @@ class App extends React.Component {
               generateWallet={this.generateWallet.bind(this)}
               confirmWallet={this.confirmWallet.bind(this)}
               deleteWallet={this.deleteWallet.bind(this)}
+              handleConfirm={this.synchronizeWallet.bind(this)}
+              walletSyncProgress = {Math.trunc(this.state.walletSyncProgress)}
             />} />
             <Route path="/backup" render={(props) => <Backup
               {...props}
