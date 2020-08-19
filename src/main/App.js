@@ -31,7 +31,8 @@ class App extends React.Component {
       wallet: null,
       phraseIsConfirmed: false,
       walletSyncProgress: 0,
-      restoreHeight: 0
+      restoreHeight: 0,
+      walletIsSynced: false
     };
   }
   
@@ -146,6 +147,9 @@ class App extends React.Component {
 	console.log("Attempting to synchronize wallet");
 	let result = await this.state.wallet.sync(new WalletSyncPrinter(this));  // synchronize and print progress
 	console.log("\"finished\" synchronizing wallet");
+	this.setState({
+	  walletIsSynced: true
+	})
   }
 
 
@@ -153,7 +157,7 @@ class App extends React.Component {
     return(
       <div id="app_container">
         <Router>
-          <Banner />
+          <Banner walletIsSynced={this.state.walletIsSynced}/>
           <Switch>
             <Route exact path="/" render={() => {
               alert("Redirection to 'Home'");
@@ -212,7 +216,7 @@ class WalletSyncPrinter extends MoneroWalletListener {
 	console.log("Running onSyncProgress...");
     //let percentString = Math.floor(parseFloat(percentDone) * 100).toString() + "%";
     //$("#progressBar").width(percentString);
-	this.callingComponent.setCurrentSyncProgress(percentDone*100); 
+    this.callingComponent.setCurrentSyncProgress(percentDone*100); 
     if (percentDone >= this.lastIncrement + this.syncResolution) {
       console.log("onSyncProgress(" + height + ", " + startHeight + ", " + endHeight + ", " + percentDone  + ", " + message + ")");
       this.lastIncrement += this.syncResolution;
