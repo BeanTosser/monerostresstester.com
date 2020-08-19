@@ -8,6 +8,7 @@ import Deposit from "./components/pages/Deposit.js";
 import SignOut from "./components/pages/SignOut.js";
 import Backup from "./components/pages/Backup.js";
 import Withdraw from "./components/pages/Withdraw.js";
+import Wallet from "./components/pages/Wallet.js";
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 
 const monerojs = require("monero-javascript");
@@ -154,6 +155,22 @@ class App extends React.Component {
 
 
   render(){
+    const homeRoute = this.state.walletIsSynced ? 
+      <Route path="/home" render={() => <Wallet
+        
+      />} />
+    :
+      <Route path="/home" render={() => <Home
+        walletPhrase={this.state.walletPhrase}
+        generateWallet={this.generateWallet.bind(this)}
+        confirmWallet={this.confirmWallet.bind(this)}
+        restoreWallet={this.restoreWallet.bind(this)}
+        setEnteredPhrase={this.setEnteredPhrase.bind(this)}
+        deleteWallet={this.deleteWallet.bind(this)}
+        walletSyncProgress = {Math.trunc(this.state.walletSyncProgress)}
+        setRestoreHeight = {this.setRestoreHeight.bind(this)}
+      />} />;
+      
     return(
       <div id="app_container">
         <Router>
@@ -165,16 +182,7 @@ class App extends React.Component {
                 <Redirect to="/home" />
               );
             }} />
-            <Route path="/home" render={() => <Home
-              walletPhrase={this.state.walletPhrase}
-              generateWallet={this.generateWallet.bind(this)}
-              confirmWallet={this.confirmWallet.bind(this)}
-              restoreWallet={this.restoreWallet.bind(this)}
-              setEnteredPhrase={this.setEnteredPhrase.bind(this)}
-              deleteWallet={this.deleteWallet.bind(this)}
-              walletSyncProgress = {Math.trunc(this.state.walletSyncProgress)}
-              setRestoreHeight = {this.setRestoreHeight.bind(this)}
-            />} />
+            {homeRoute}
             <Route path="/backup" render={(props) => <Backup
               {...props}
             />} />
