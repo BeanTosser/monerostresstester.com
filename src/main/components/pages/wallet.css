@@ -1,0 +1,29 @@
+  <div class="wallet_page_section">
+    <div class="wallet_page_sections_container">
+      <div class="wallet_page_section_label">
+        Test Label
+      </div>
+      <div class="wallet_page_section_value">
+      
+
+.wallet_page_section {
+  display: flex;
+  flex-direction: column;
+  width: inherit;
+}
+.wallet_page_section_text {
+  display: flex;
+  flex-direction: row;
+  width: inherit;
+}
+.wallet_page_sections_container {
+  width: var(--item-width);
+}
+.wallet_page_section_label {
+  float: left;  
+  width: 50%;
+}
+.wallet_page_section_value {
+  float: right;
+  width: 50%;
+}
