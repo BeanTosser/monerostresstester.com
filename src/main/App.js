@@ -111,20 +111,6 @@ class App extends React.Component {
       walletSyncProgress: 0
     })
   }
-
-  /*
-          function confirmationCallback(isConfirmed) {
-        	console.log("running confirmationCallback");  
-	        if(isConfirmed) {
-	          alert("The phrase matches!");
-	          props.history.push("/home/synchronize_wallet");
-	        } else {
-              alert("The phrase you entered does not match the generated mnemonic!  Re-enter the phrase or go back to generate a new wallet.");
-            }
-          }
-	    )
-      }
-   */
   
   async confirmWallet(browserHistory) {
 	alert("Running confirmWallet");
@@ -157,7 +143,6 @@ class App extends React.Component {
   render(){
     const homeRoute = this.state.walletIsSynced ? 
       <Route path="/home" render={() => <Wallet
-        
       />} />
     :
       <Route path="/home" render={() => <Home
@@ -177,7 +162,6 @@ class App extends React.Component {
           <Banner walletIsSynced={this.state.walletIsSynced}/>
           <Switch>
             <Route exact path="/" render={() => {
-              alert("Redirection to 'Home'");
               return(
                 <Redirect to="/home" />
               );
