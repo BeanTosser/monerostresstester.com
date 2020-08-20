@@ -1,29 +1,30 @@
-  <div class="wallet_page_section">
-    <div class="wallet_page_sections_container">
-      <div class="wallet_page_section_label">
-        Test Label
-      </div>
-      <div class="wallet_page_section_value">
-      
-
 .wallet_page_section {
-  display: flex;
-  flex-direction: column;
-  width: inherit;
+  display: grid;
+  grid-template-areas:
+  '      .                .                 .     ' 
+  'section_label          .          section_value'
+  'horizontal_line horizontal_line horizontal_line'
+  '      .                .                 .     ';
+  grid-template-rows: 36px auto auto 36px;
+  grid-template-columns: auto 1fr auto;
 }
-.wallet_page_section_text {
-  display: flex;
-  flex-direction: row;
+.wallet_page_box {
+  background-color: white;
+}
+.horizontal_rule {
+  grid-area: horizontal_line;
+}
+.wallet_page_text {
   width: inherit;
+  font-size: 24px;
 }
 .wallet_page_sections_container {
   width: var(--item-width);
+  padding-top: 38px;
 }
 .wallet_page_section_label {
-  float: left;  
-  width: 50%;
+  grid-area: section_label;
 }
 .wallet_page_section_value {
-  float: right;
-  width: 50%;
+  grid-area: section_value;
 }

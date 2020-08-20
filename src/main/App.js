@@ -33,7 +33,8 @@ class App extends React.Component {
       phraseIsConfirmed: false,
       walletSyncProgress: 0,
       restoreHeight: 0,
-      walletIsSynced: false
+      //Temp! restore to true when done testing
+      walletIsSynced: true
     };
   }
   

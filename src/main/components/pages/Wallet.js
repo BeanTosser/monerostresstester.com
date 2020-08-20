@@ -1,28 +1,32 @@
 import React from 'react';
 import {Page_Box} from "../Widgets.js";
 import "./wallet.css";
+
 export default function Wallet(props){
   return(
-    <Page_Box>
-       <Wallet_Page_Section />
+    <Page_Box className="wallet_page_box">
+      <div className="wallet_page_sections_container">
+        <Wallet_Page_Section label = "Balance" value="0 XMR" />
+        <Wallet_Page_Section label = "Available balance" value="0 XMR" />
+        <Wallet_Page_Section label = "Transactions generated" value="0" />
+        <Wallet_Page_Section label = "Total fees" value="0 XMR" />
+      </div>
     </Page_Box>
   );
 }
 
-function Wallet_Page_Section(props){
+function Wallet_Page_Section(props) {
   return(
-    <div className="wallet_page_sections_container">
-      <div className="wallet_page_section">
-        <div className="wallet_page_section_text">
-          <div className="wallet_page_section_label">
-            Test Label
-          </div>
-          <div className="wallet_page_section_value">
-            Test Value
-          </div>
-        </div>
+    <div className="wallet_page_section">
+      <div className="wallet_page_section_label wallet_page_text">
+        {props.label}
       </div>
-      <hr />
+      <div className="wallet_page_section_value wallet_page_text">
+        {props.value}
+      </div>
+      <div className="horizontal_rule">
+        <hr />
+      </div>
     </div>
   );
 }
