@@ -1,5 +1,8 @@
 :root {
   --button-border-width: 4px;
+  --wallet-button-width: calc(var(--item-width)*0.8);
+  --wallet-button-active-color: green;
+  --wallet-button-inactive-color: gray;
 }
 
 .ui_link_container {
@@ -37,6 +40,17 @@
   font-size: 34px;
   border: var(--button-border-width) solid black;
   color: white;
+}
+
+.ui_wallet_button_link {
+	width: var(--wallet-button-width);
+}
+
+.ui_active_wallet_button {
+	background-color: var(--wallet-button-active-color);
+}
+.ui_inactive_wallet_button {
+	background-color: var(--wallet-button-inactive-color);
 }
 
 .ui_text_link {

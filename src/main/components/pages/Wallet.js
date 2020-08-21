@@ -1,6 +1,7 @@
 import React from 'react';
 import {Page_Box} from "../Widgets.js";
 import "./wallet.css";
+import {UI_Button_Link} from "../Buttons.js";
 
 export default function Wallet(props){
   return(
@@ -10,6 +11,7 @@ export default function Wallet(props){
         <Wallet_Page_Section label = "Available balance" value="0 XMR" />
         <Wallet_Page_Section label = "Transactions generated" value="0" />
         <Wallet_Page_Section label = "Total fees" value="0 XMR" />
+        <UI_Button_Link link_text="Start generating trans" destination="/" className="ui_wallet_button_link ui_inactive_wallet_button" />
       </div>
     </Page_Box>
   );
