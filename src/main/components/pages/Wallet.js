@@ -11,7 +11,7 @@ export default function Wallet(props){
         <Wallet_Page_Section label = "Available balance" value="0 XMR" />
         <Wallet_Page_Section label = "Transactions generated" value="0" />
         <Wallet_Page_Section label = "Total fees" value="0 XMR" />
-        <UI_Button_Link link_text="Start generating trans" destination="/" className="ui_wallet_button_link ui_inactive_wallet_button" />
+        <UI_Button_Link link_text="Start generating transactions" destination="/" className="ui_wallet_button_link ui_inactive_wallet_button" />
       </div>
     </Page_Box>
   );
