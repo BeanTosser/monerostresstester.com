@@ -14,16 +14,11 @@ import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 const monerojs = require("monero-javascript");
 const MoneroWalletListener = monerojs.MoneroWalletListener;
 
-//TEMPORARY values for testing the progress bar
-const TEST_SYNC_UPDATE_INTERVAL = 0.1;
-const TEST_SYNC_TIMER_INTERVAL = 20;
-
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      walletPhrase: "",
       /*
        * The mnemonic phrase (or portion thereof) that the user has typed into
        * either the "confirm" or "restore" wallet text box
@@ -34,7 +29,7 @@ class App extends React.Component {
       walletSyncProgress: 0,
       restoreHeight: 0,
       //Temp! restore to true when done testing
-      walletIsSynced: true
+      walletIsSynced: false
     };
   }
   
@@ -53,7 +48,6 @@ class App extends React.Component {
   }
 
   async generateWallet(){
-    alert("Generating new wallet");
     let walletWasm = await monerojs.createWalletWasm({
       password: "supersecretpassword123",
       networkType: "stagenet",
@@ -63,15 +57,12 @@ class App extends React.Component {
       serverPassword: "abctesting123",
     });
     let newPhrase = await walletWasm.getMnemonic();
-    alert("Wallet generated! New phrase = " + newPhrase);
     this.setState ({
       wallet: walletWasm,
-      walletPhrase: newPhrase
     });
   }
   
   async restoreWallet(browserHistory){
-	    alert("Attempting to restore wallet");
 	    let walletWasm = null;
 	    try {
 	      walletWasm = await monerojs.createWalletWasm({
@@ -91,22 +82,18 @@ class App extends React.Component {
 	    }
 	    this.setState ({
 	      wallet: walletWasm,
-	      walletPhrase: this.state.enteredPhrase
 	    });
-	    alert("Restoring a TOTALLY valid wallet!");
 	    browserHistory.push("/home/synchronize_wallet");
 	    await this.synchronizeWallet();
 	  }
   
   setCurrentSyncProgress(percentDone){
-	  this.setState({walletSyncProgress: percentDone});
-	  console.log("Updating sync progress: " + percentDone)
+    this.setState({walletSyncProgress: percentDone});
+    console.log("Updating sync progress: " + percentDone)
   }
 
   deleteWallet() {
-    alert("Deleting wallet");
     this.setState ({
-      walletPhrase: "",
       wallet: null,
       phraseIsConfirmed: false,
       walletSyncProgress: 0
@@ -114,14 +101,12 @@ class App extends React.Component {
   }
   
   async confirmWallet(browserHistory) {
-	alert("Running confirmWallet");
-	console.log("Entered phrase: " + this.state.enteredPhrase);
-	console.log("wallet phrase: " + this.state.walletPhrase);
-    if (this.state.enteredPhrase === this.state.walletPhrase) {
+    console.log("Entered phrase: " + this.state.enteredPhrase);
+    let walletPhrase = await this.state.wallet.getMnemonic();
+    if (this.state.enteredPhrase === walletPhrase) {
       this.setState ({
         phraseIsConfirmed: true
       });
-      alert("The phrase matches!");
       browserHistory.push("/home/synchronize_wallet");
       await this.synchronizeWallet();
     } else {
@@ -143,11 +128,12 @@ class App extends React.Component {
 
   render(){
     const homeRoute = this.state.walletIsSynced ? 
-      <Route path="/home" render={() => <Wallet
+      <Route path="/home" render={async () => <Wallet
+    	balance={await this.state.wallet.getBalance()}
+	availableBalance={await this.state.wallet.getUnlockedBalance()}
       />} />
     :
       <Route path="/home" render={() => <Home
-        walletPhrase={this.state.walletPhrase}
         generateWallet={this.generateWallet.bind(this)}
         confirmWallet={this.confirmWallet.bind(this)}
         restoreWallet={this.restoreWallet.bind(this)}
@@ -214,6 +200,9 @@ class WalletSyncPrinter extends MoneroWalletListener {
       console.log("onSyncProgress(" + height + ", " + startHeight + ", " + endHeight + ", " + percentDone  + ", " + message + ")");
       this.lastIncrement += this.syncResolution;
     }
+  }
+  onBalancesChanged(newBalance, newUnlockedBalance){
+    
   }
 }
 

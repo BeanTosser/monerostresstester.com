@@ -66,8 +66,10 @@ function Welcome(props) {
     <Page_Box className = "home_subpage_box">
       <div className="title"> Welcome to <b>MoneroStressTester.com</b></div>
       <div className="sub_title">Open-source, client-side transaction generator</div>
-      <UI_Button_Link link_text="Create New Wallet" destination={`${props.match.url}/new_wallet`} handleClick={props.handleContinue}/>
-      <UI_Text_Link link_text="Or Import Existing Wallet" destination={`${props.match.url}/import_wallet`} />
+      <div className="home_button_links">
+      	<UI_Button_Link link_text="Create New Wallet" destination={`${props.match.url}/new_wallet`} handleClick={props.handleContinue}/>
+      	<UI_Text_Link link_text="Or Import Existing Wallet" destination={`${props.match.url}/import_wallet`} />
+      </div>
     </Page_Box>
   );
 }
