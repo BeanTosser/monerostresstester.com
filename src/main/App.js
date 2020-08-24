@@ -25,12 +25,23 @@ class App extends React.Component {
        */
       enteredPhrase: "", // The mnemonic phrase (or portion thereof) that
       wallet: null,
+      walletPhrase: "",
       phraseIsConfirmed: false,
       walletSyncProgress: 0,
       restoreHeight: 0,
-      //Temp! restore to true when done testing
-      walletIsSynced: false
+      walletIsSynced: false,
+      balance: 0,
+      availableBalance: 0
+      
     };
+  }
+      
+  
+  setBalances(balance, availableBalance){
+    this.setState({
+      balance: balance,
+      availableBalance: availableBalance
+    });
   }
   
   setRestoreHeight(height){
@@ -48,6 +59,8 @@ class App extends React.Component {
   }
 
   async generateWallet(){
+    
+    console.log("Generating wallet");
     let walletWasm = await monerojs.createWalletWasm({
       password: "supersecretpassword123",
       networkType: "stagenet",
@@ -56,9 +69,11 @@ class App extends React.Component {
       serverUsername: "superuser",
       serverPassword: "abctesting123",
     });
+    console.log("Wallet generated!");
     let newPhrase = await walletWasm.getMnemonic();
     this.setState ({
       wallet: walletWasm,
+      walletPhrase: newPhrase
     });
   }
   
@@ -80,11 +95,11 @@ class App extends React.Component {
 	      alert("Error: " + e);
 	      return;
 	    }
-	    this.setState ({
-	      wallet: walletWasm,
-	    });
 	    browserHistory.push("/home/synchronize_wallet");
-	    await this.synchronizeWallet();
+	    await this.synchronizeWallet(walletWasm);
+	    this.setState ({
+	      wallet: walletWasm
+	    });
 	  }
   
   setCurrentSyncProgress(percentDone){
@@ -95,8 +110,12 @@ class App extends React.Component {
   deleteWallet() {
     this.setState ({
       wallet: null,
+      walletPhrase: "",
+      enteredPhrase: "",
       phraseIsConfirmed: false,
-      walletSyncProgress: 0
+      walletSyncProgress: 0,
+      balance: 0,
+      availableBalance: 0
     })
   }
   
@@ -108,7 +127,7 @@ class App extends React.Component {
         phraseIsConfirmed: true
       });
       browserHistory.push("/home/synchronize_wallet");
-      await this.synchronizeWallet();
+      await this.synchronizeWallet(wallet);
     } else {
       alert("The phrase you entered does not match the generated mnemonic! Re-enter the phrase or go back to generate a new wallet.");
     }
@@ -116,21 +135,25 @@ class App extends React.Component {
   }
   
   //Called when the user clicks "continue" after entering a valid new (for restore) or confirm (for create new) seed phrase.
-  async synchronizeWallet() {
+  async synchronizeWallet(wallet) {
 	console.log("Attempting to synchronize wallet");
-	let result = await this.state.wallet.sync(new WalletSyncPrinter(this));  // synchronize and print progress
+	let result = await wallet.sync(new WalletSyncPrinter(this));  // synchronize and print progress
 	console.log("\"finished\" synchronizing wallet");
+	let balance = await wallet.getBalance();
+	let availableBalance = await wallet.getUnlockedBalance();
 	this.setState({
-	  walletIsSynced: true
+	  walletIsSynced: true,
+	  balance: balance,
+	  availableBalance: availableBalance
 	})
   }
 
 
   render(){
     const homeRoute = this.state.walletIsSynced ? 
-      <Route path="/home" render={async () => <Wallet
-    	balance={await this.state.wallet.getBalance()}
-	availableBalance={await this.state.wallet.getUnlockedBalance()}
+      <Route path="/home" render={() => <Wallet
+        balance={this.state.balance}
+        availableBalance={this.state.availableBalance}
       />} />
     :
       <Route path="/home" render={() => <Home
@@ -141,7 +164,8 @@ class App extends React.Component {
         deleteWallet={this.deleteWallet.bind(this)}
         walletSyncProgress = {Math.trunc(this.state.walletSyncProgress)}
         setRestoreHeight = {this.setRestoreHeight.bind(this)}
-      />} />;
+        walletPhrase = {this.state.walletPhrase}
+      />} />
       
     return(
       <div id="app_container">
@@ -202,7 +226,8 @@ class WalletSyncPrinter extends MoneroWalletListener {
     }
   }
   onBalancesChanged(newBalance, newUnlockedBalance){
-    
+    console.log("Calling onBalancesChanged");  
+    this.callingComponent.setBalances(newBalance, newUnlockedBalance); 
   }
 }
 
