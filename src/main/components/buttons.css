@@ -6,6 +6,10 @@
   --wallet-button-active-color: #56c1ff;
   --wallet-button-hover-color: #78e3ff;
   --wallet-button-click-color: #34a0dd;
+  --alt-wallet-button-active-color: #ff0000;
+  --alt-wallet-button-hover-color: #ff2222;
+  --alt-wallet-button-click-color: #dd1144;
+  
   --wallet-button-inactive-color: gray;
 }
 
@@ -50,12 +54,24 @@
   color: white;
 }
 
+.ui_button_link.stop_tx_generation_color {
+	background-color: var(--alt-wallet-button-active-color);
+}
+
 a.ui_button_link:hover {
   background-color: var(--wallet-button-hover-color);
 }
 
+a.ui_button_link.stop_tx_generation_color:hover {
+	background-color: var(--alt-wallet-button-hover-color);
+}
+
 a.ui_button_link:active{
   background-color: var(--wallet-button-click-color);
+}
+
+a.ui_button_link.stop_tx_generation_color:active{
+  background-color: var(--alt-wallet-button-click-color);
 }
 
 .ui_button_link_inactive {
@@ -63,6 +79,10 @@ a.ui_button_link:active{
   font-size: 34px;
   border: var(--button-border-width) solid black;
   color: white;
+}
+
+.stop_tx_generation_color: {
+  background-color: red;
 }
 
 div.ui_button_link_inactive:hover {

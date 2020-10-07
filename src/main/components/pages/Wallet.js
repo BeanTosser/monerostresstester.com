@@ -47,8 +47,8 @@ export default function Wallet(props){
         <UI_Button_Link 
           handleClick = {buttonHandleContinue}
           destination="/" 
-          className={"ui_wallet_button_link"} 
           isactive={buttonIsActive}
+          className={props.isGeneratingTxs ? "stop_tx_generation_color" : ""} 
         >
           {buttonText}
         </UI_Button_Link>
