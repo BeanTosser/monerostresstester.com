@@ -57,13 +57,6 @@ export default function Wallet(props){
   );
 }
 
-/*
- *           isGeneratingTxs = {this.state.isGeneratingTxs}
-          walletIsFunded = {this.state.walletIsFunded}
-          startGeneratingTxs = {this.startGeneratingTxs}
-          stopGeneratingTxs = {this.stopGeneratingTxs}
- */
-
 function Wallet_Page_Section(props) {
   return(
     <div className="wallet_page_section">
