@@ -23,7 +23,7 @@
 }
 
 .save_phrase_box_bottom_margin {
-  height: 28px;
+  height: 42px;
 }
 .regenerate_button_bottom_margin {
   height: 16px;
@@ -118,7 +118,8 @@
 
 .enter_restore_height_box {
   background-color: var(--text-entry-background-color);
-  height: 42px;
+  margin-top: 42px;
+  height: 56px;
 }
 
 textarea {
