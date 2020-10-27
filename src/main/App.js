@@ -14,6 +14,8 @@ import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import MoneroTxGenerator from './MoneroTxGenerator.js';
 import MoneroTxGeneratorListener from './MoneroTxGeneratorListener.js';
 
+import qrcode from './qrcode.js';
+
 import flexingLogo from './img/muscleFlex.gif';
 import relaxingLogo from './img/muscleRelax.gif';
 
