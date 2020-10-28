@@ -10,11 +10,12 @@ import Backup from "./components/pages/Backup.js";
 import Withdraw from "./components/pages/Withdraw.js";
 import {Loading_Animation, getLoadingAnimationFile} from "./components/Widgets.js";
 
+import QRCode from "./components/QR_Code.js";
+import qrcode from './qrcode.js';
+
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import MoneroTxGenerator from './MoneroTxGenerator.js';
 import MoneroTxGeneratorListener from './MoneroTxGeneratorListener.js';
-
-import qrcode from './qrcode.js';
 
 import flexingLogo from './img/muscleFlex.gif';
 import relaxingLogo from './img/muscleRelax.gif';
@@ -120,7 +121,8 @@ class App extends React.Component {
       enteredHeightIsValid: true,
       animationIsLoaded: false,
       isAwaitingWalletVerification: false,
-      flexLogo: relaxingLogo
+      flexLogo: relaxingLogo,
+      depositQrCode: null
     };
   }
   
@@ -280,6 +282,14 @@ class App extends React.Component {
           currentHomePage: "Wallet",
           walletIsFunded: walletIsFunded
         });
+        let that=this;
+        qrcode.toDataUrl(this.state.walletPhrase, function(err, url){
+            code = <QR_Code url={url} />;
+            that.setState({
+              depositQrCode: code
+            });
+          }
+        );
 
       } else {
 	
@@ -432,7 +442,8 @@ async generateWallet(){
       totalFees: 0,
       enteredMnemonicIsValid: true,
       enteredHeightIsValid: true,
-      isAwaitingWalletVerification: false
+      isAwaitingWalletVerification: false,
+      depositQrCode: null
     });
     this.txGenerator = null;
     this.walletUpdater = null;
@@ -471,6 +482,14 @@ async generateWallet(){
         currentHomePage: "Wallet",
         isAwaitingWalletVerification: false
       });
+      qrcode.toDataUrl(this.state.walletPhrase, function(err, url){
+          code = <QR_Code url={url} />;
+          that.setState({
+            depositQrCode: code
+          });
+        }
+      );
+      
     } else {
       this.setState({
         enteredMnemonicIsValid: false,
@@ -586,8 +605,8 @@ async generateWallet(){
               <Route path="/backup" render={(props) => <Backup
                 {...props}
               />} />
-              <Route path="/deposit" render={(props) => <Deposit
-                {...props}
+              <Route path="/deposit" render={() => <Deposit
+                depositQrCode = {this.state.depositQrCode}
               />} />
               <Route path="/sign_out" render={(props) => <SignOut
                 {...props}
