@@ -11,6 +11,8 @@
   --text-box-text-color: black;
   --text-entry-inactive-border-color: red;
   --text-entry-border-color: black;
+  
+  --deposit-page-box-width: 800px;
 }
 
 .page_box > div {
@@ -21,6 +23,11 @@
   width: var(--page-box-width);
   height: 100%;
   margin: 0 auto;
+}
+
+.page_box.deposit_page_box {
+  width: var(--deposit-page-box-width);
+  height: auto;
 }
 
 .save_phrase_box_bottom_margin {

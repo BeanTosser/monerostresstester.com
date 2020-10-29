@@ -10,7 +10,7 @@ import Backup from "./components/pages/Backup.js";
 import Withdraw from "./components/pages/Withdraw.js";
 import {Loading_Animation, getLoadingAnimationFile} from "./components/Widgets.js";
 
-import QRCode from "./components/QR_Code.js";
+import QR_Code from "./components/QR_Code.js";
 import qrcode from './qrcode.js';
 
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
@@ -60,8 +60,13 @@ class App extends React.Component {
     
     // print current version of monero-javascript
     
+    /*
+     * Member Variables
+     * No need to store these in state since no component's need to re-render when their values are set
+     */
     this.txGenerator = null;
     this.walletUpdater = null;
+    this.walletAddress = "empty";
     
     // In order to pass "this" into the nested functions...
     let that = this;
@@ -103,7 +108,6 @@ class App extends React.Component {
        */
       enteredPhrase: "",
       wallet: null,
-      keysOnlyWallet: null,
       walletPhrase: "",
       phraseIsConfirmed: false,
       walletSyncProgress: 0,
@@ -282,9 +286,8 @@ class App extends React.Component {
           currentHomePage: "Wallet",
           walletIsFunded: walletIsFunded
         });
-        let that=this;
-        qrcode.toDataUrl(this.state.walletPhrase, function(err, url){
-            code = <QR_Code url={url} />;
+        qrcode.toDataURL(that.walletAddress, function(err, url){
+            let code = <QR_Code url={url} />;
             that.setState({
               depositQrCode: code
             });
@@ -342,7 +345,6 @@ async generateWallet(){
   let newPhrase = await walletKeys.getMnemonic();
   
   this.setState({
-    keysOnlyWallet: walletKeys,
     walletPhrase: newPhrase
   });
   let wasmWalletInfo = Object.assign({}, WALLET_INFO);
@@ -364,7 +366,10 @@ async generateWallet(){
     // resolve wallet promise
     // TODO (woodser): create new wallet button needs greyed while this loads
     let wallet = await this.state.wallet;
-
+    
+    // Keep track of the wallet's address
+    this.walletAddress = await wallet.getAddress(0,0);
+    
     // If the user hit "Or go back" before the wallet finished building, abandon wallet creation
     // and do NOT proceed to wallet page
     if(this.userCancelledWalletConfirmation){
@@ -428,7 +433,6 @@ async generateWallet(){
       currentHomePage: "Welcome",
       enteredPhrase: "",
       wallet: null,
-      keysOnlyWallet: null,
       walletPhrase: "",
       phraseIsConfirmed: false,
       walletSyncProgress: 0,
@@ -482,8 +486,9 @@ async generateWallet(){
         currentHomePage: "Wallet",
         isAwaitingWalletVerification: false
       });
-      qrcode.toDataUrl(this.state.walletPhrase, function(err, url){
-          code = <QR_Code url={url} />;
+      let that = this;
+      qrcode.toDataURL(this.walletAddress, function(err, url){
+          let code = <QR_Code url={url} />;
           that.setState({
             depositQrCode: code
           });
@@ -607,6 +612,7 @@ async generateWallet(){
               />} />
               <Route path="/deposit" render={() => <Deposit
                 depositQrCode = {this.state.depositQrCode}
+                walletAddress = {this.walletAddress}
               />} />
               <Route path="/sign_out" render={(props) => <SignOut
                 {...props}
