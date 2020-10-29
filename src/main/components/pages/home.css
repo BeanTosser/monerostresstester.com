@@ -1,6 +1,4 @@
-:root {
-  --app-content-bg-color: #ece4d4;
-}
+
 
 #home {
   grid-template-rows: 110px auto;

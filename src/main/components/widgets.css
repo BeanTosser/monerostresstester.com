@@ -25,11 +25,6 @@
   margin: 0 auto;
 }
 
-.page_box.deposit_page_box {
-  width: var(--deposit-page-box-width);
-  height: auto;
-}
-
 .save_phrase_box_bottom_margin {
   height: 42px;
 }

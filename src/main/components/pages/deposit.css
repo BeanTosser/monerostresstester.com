@@ -1,0 +1,27 @@
+:root {
+	--deposit-page-box-width: 800px;
+}
+
+.deposit_page_box {
+  margin-top: 200px;
+  grid-row-gap: 0px;
+  display: grid;
+  grid-template:
+  "title" 
+  "code_image"
+  "code_text";
+  grid-template-columns: calc((var(--deposit-page-box-width) - var(--item-width))/2), var(--item-width), calc((var(--deposit-page-box-width) - var(--item-width))/2);
+  background-color: var(--app-content-bg-color);
+}
+
+.title {
+  grid-area: title;
+}
+
+.code_image {
+  grid-area: code_image;
+}
+
+.code_text {
+  grid-area: code_text;
+}
