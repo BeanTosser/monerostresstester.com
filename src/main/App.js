@@ -126,7 +126,8 @@ class App extends React.Component {
       isAwaitingWalletVerification: false,
       flexLogo: relaxingLogo,
       depositQrCode: null,
-      isAwaitingDeposit: false
+      isAwaitingDeposit: false,
+      blocksToNextUnlock: -1
     };
   }
   
@@ -399,11 +400,20 @@ async generateWallet(){
         console.log("MoneroTxGenerator numSplitOutputs: " + numSplitOutputs);
         console.log("MoneroTxGenerator getNumBlocksToNextUnlock: " + numBlocksToNextUnlock);
         console.log("MoneroTxGenerator getNumBlocksToLastUnlock: " + numBlocksToLastUnlock);
+        
+        let isCycling = false;
+        
+        if (tx.getOutgoingTransfer().getDestinations().length == 1) {
+          isCycling = true;
+        }
+        
         that.setState({
           transactionsGenerated: numTxsGenerated,
           balance: balance,
           availableBalance: unlockedBalance,
-          totalFees: totalFees
+          totalFees: totalFees,
+          blocksToNextUnlock: numBlocksToNextUnlock,
+          isCycling: isCycling
         });
         that.playMuscleAnimation.bind(that)();
       }
@@ -480,7 +490,9 @@ async generateWallet(){
       enteredHeightIsValid: true,
       isAwaitingWalletVerification: false,
       depositQrCode: null,
-      isAwaitingDeposit: false
+      isAwaitingDeposit: false,
+      blocksToNextUnlock: -1,
+      isCycling: isCycling
     });
     this.txGenerator = null;
     this.walletUpdater = null;

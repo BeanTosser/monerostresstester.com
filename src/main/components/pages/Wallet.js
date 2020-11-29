@@ -5,6 +5,19 @@ import {Home_UI_Button_Link} from "../Buttons.js";
 
 const XMR_AU_RATIO = 0.000000000001;
 
+/*
+ * TX Button Messages
+ * 
+ * 1. Start Generating Transactions
+ * 2. Waiting for available funds (available in ~20 minutes)
+ * 3. Split ### new outputs (available in ~## minutes)
+ * 4. Cycling outputs (available in ~# minutes)
+ * 6. Cycling outputs
+ * 7. Pause transaction generation
+ * 
+ * 
+ */
+
 export default function Wallet(props){
   /*
    * PROPS:
@@ -17,6 +30,9 @@ export default function Wallet(props){
    *   startGeneratingTxs
    *   stopGeneratingTxs
    */
+  
+  // Typical time to add a new block to the chain
+  let AVERAGE_BLOCK_TIME = 2;
   
   let buttonHandleContinue = null;
   let buttonTextElement = null;
