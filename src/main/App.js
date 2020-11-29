@@ -402,9 +402,12 @@ async generateWallet(){
         console.log("MoneroTxGenerator getNumBlocksToLastUnlock: " + numBlocksToLastUnlock);
         
         let isCycling = false;
+        let splitOutputs = false;
         
         if (tx.getOutgoingTransfer().getDestinations().length == 1) {
           isCycling = true;
+        } else if (tx.getOutgoingTransfer().getDestinations().length > 1) {
+          splitOutputs = true;
         }
         
         that.setState({
@@ -413,7 +416,8 @@ async generateWallet(){
           availableBalance: unlockedBalance,
           totalFees: totalFees,
           blocksToNextUnlock: numBlocksToNextUnlock,
-          isCycling: isCycling
+          isCycling: isCycling,
+          splitOutputs: splitOutputs
         });
         that.playMuscleAnimation.bind(that)();
       }
@@ -663,6 +667,9 @@ async generateWallet(){
                 cancelImport = {this.cancelImport.bind(this)}
                 cancelConfirmation = {this.cancelConfirmation.bind(this)}
                 forceWait = {this.state.isAwaitingWalletVerification}
+                blocksToUnlock = {this.state.blocksToUnlock}
+                isCycling = {this.state.isCycling}
+                splitOutputs = {this.state.splitOutputs}
               />} />
               <Route path="/backup" render={(props) => <Backup
                 {...props}

@@ -13,6 +13,8 @@ export function Router_UI_Button_Link(props) {
             props.handleClick();
           }
         }}
+        onMouseOver = {props.onmouseover}
+        onMouseOut = {props.onmouseout}
         to={props.destination}
       >
         <div className="button_contents_container">

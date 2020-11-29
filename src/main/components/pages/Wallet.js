@@ -31,7 +31,7 @@ export default function Wallet(props){
    *   stopGeneratingTxs
    */
   
-  // Typical time to add a new block to the chain
+  // Typical time to add a new block to the chain (in minutes)
   let AVERAGE_BLOCK_TIME = 2;
   
   let buttonHandleContinue = null;
@@ -39,18 +39,44 @@ export default function Wallet(props){
   let buttonIsActive = false;
   
   if(props.walletIsFunded){
+    
     buttonIsActive = true;
     if(props.isGeneratingTxs){
-      buttonTextElement = <>Stop generating transactions</>;
-      buttonHandleContinue = props.stopGeneratingTxs;
+      if(props.mouseIsOnTxGenButton){
+        buttonTextElement = <>Pause transaction generation</>;
+        buttonHandleContinue = props.stopGeneratingTxs;
+      } else {
+	if(props.isCycling){
+	  if(blocksToUnlock > 0){
+	    buttonTextElement = <>Cycling (~{AVERAGE_BLOCK_TIME * props.blocksToUnlock} minutes)</>
+	  } else {
+	    buttonTextElement = <>Cycling</>
+	  }
+	} else if (props.splitOutputs){
+	  if(blocksToUnlock > 0){
+	    buttonTextElement = <>Split outputs (~{AVERAGE_BLOCK_TIME * props.blocksToUnlock} minutes)</>
+	  } else {
+	    buttonTextElement = <>Split outputs</>
+	  }
+	}
+      }
     } else {
-      buttonTextElement = <>Start generating transactions</>;
+      buttonTextElement = <>Start Generating Transactions</>;
       buttonHandleContinue = props.startGeneratingTxs;
     }
     
   } else {
-    buttonTextElement= <>Fund wallet before generating transactions</>
-    buttonIsActive=false;
+    if(props.fundsArePending){
+      
+      
+      // CONTINUE WORK HERE
+      
+      
+      
+    } else {
+      buttonTextElement= <>Start Generating Transactions</>
+      buttonIsActive=false;
+    }
   }
   
   return(
@@ -66,6 +92,8 @@ export default function Wallet(props){
             destination="/" 
             isactive={buttonIsActive}
             className={props.isGeneratingTxs ? "stop_tx_generation_color" : ""} 
+            onmouseover={(function() {this.mouseIsOnTxGenButton = true}).bind(this)}
+            onmouseout={(function() {this.mouseIsOnTxGenButton = false}).bind(this)}
           >
             {buttonTextElement}
           </Home_UI_Button_Link>
