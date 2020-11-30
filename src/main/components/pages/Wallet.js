@@ -60,22 +60,37 @@ class Wallet extends React.Component {
     
     
     // planning if/then structure for status message
-    if(this.props.balance > 0){
+    if(this.props.balance == 0){
       /*
+       * The wallet is unfunded and has no inbound funds
+       * 
        * start button says "Start Generating Transactions" but is disabled
        *  notification bar to deposit funds is displayed
        */
+      
+      //If the wallet just ran out of funds, 
     } else {
-      // Start button is enabled
+      /*
+       * The wallet is funded or has inbound funds
+       * 
+       * 
+       */ 
       if(this.props.isGeneratingTxs){
 	/*
+	 * The wallet is i the middle of generating (or attempting to generate in the
+	 * case the the inbound funds have not yet arrived) TXs
+	 * 
 	 * once start button is clicked, button is grey to display info except 
 	 * when mouse hovers, then it turns red to indicate clickable 
 	 * stop (might get design tweaks)
 	 */
 	if(this.props.availableBalance == 0 && numTxsGenerated == 0) {
-	  // start button says "Waiting for available funds (~" + (numBlocksToNextUnlock * 2) + " minutes)"
-	}
+	  /*
+	   * Wallet is waiting for an incoming TX for funding
+	   * 
+	   * start button says "Waiting for available funds (~" + (numBlocksToNextUnlock * 2) + " minutes)"
+	   */
+	} else if()
       } else {
 	// start button is enabled / green
       }
