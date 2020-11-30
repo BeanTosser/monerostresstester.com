@@ -119,12 +119,12 @@ class Home extends React.Component {
   	  balance={this.props.balance}
           availableBalance={this.props.availableBalance}
           isGeneratingTxs = {this.props.isGeneratingTxs}
-          walletIsFunded = {this.props.walletIsFunded}
           startGeneratingTxs = {this.props.startGeneratingTxs}
           stopGeneratingTxs = {this.props.stopGeneratingTxs}
           transactionsGenerated = {this.props.transactionsGenerated}
           totalFees = {this.props.totalFees}
-          blocksToUnlock = {this.props.blocksToUnlock}
+          numBlocksToNextUnlock = {this.props.numBlocksToNextUnlock}
+          numBlocksToLastUnlock = {this.props.numBlocksToLastUnlock}
           isCycling = {this.props.isCycling}
           splitOutputs = {this.state.splitOutputs}
         />;

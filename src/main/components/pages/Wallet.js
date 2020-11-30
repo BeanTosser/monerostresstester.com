@@ -18,7 +18,26 @@ const XMR_AU_RATIO = 0.000000000001;
  * 
  */
 
-export default function Wallet(props){
+/*
+ * PROPS FOR DETERMINING STATUS MESSAGE
+ * 
+ * balance
+ * availableBalance
+ * numBlocksToNextUnlock
+ * numBlocksToLastUnlock
+ * isCycling
+ * isSplit
+ */
+
+class Wallet extends React.Component {
+
+  constructor(props){
+    super(props)
+    this.state = {
+      mouseIsOnTxGenButton: false
+    }
+  }
+  
   /*
    * PROPS:
    *   balance
@@ -26,91 +45,118 @@ export default function Wallet(props){
    *   transactions
    *   fees
    *   isGeneratingTxs
-   *   walletIsFunded
    *   startGeneratingTxs
    *   stopGeneratingTxs
    */
   
-  // Typical time to add a new block to the chain (in minutes)
-  let AVERAGE_BLOCK_TIME = 2;
+  render() {
   
-  let buttonHandleContinue = null;
-  let buttonTextElement = null;
-  let buttonIsActive = false;
-  
-  if(props.walletIsFunded){
+    // Typical time to add a new block to the chain (in minutes)
+    let AVERAGE_BLOCK_TIME = 2;
     
-    buttonIsActive = true;
-    if(props.isGeneratingTxs){
-      if(props.mouseIsOnTxGenButton){
-        buttonTextElement = <>Pause transaction generation</>;
-        buttonHandleContinue = props.stopGeneratingTxs;
-      } else {
-	if(props.isCycling){
-	  if(blocksToUnlock > 0){
-	    buttonTextElement = <>Cycling (~{AVERAGE_BLOCK_TIME * props.blocksToUnlock} minutes)</>
-	  } else {
-	    buttonTextElement = <>Cycling</>
-	  }
-	} else if (props.splitOutputs){
-	  if(blocksToUnlock > 0){
-	    buttonTextElement = <>Split outputs (~{AVERAGE_BLOCK_TIME * props.blocksToUnlock} minutes)</>
-	  } else {
-	    buttonTextElement = <>Split outputs</>
-	  }
+    let buttonHandleContinue = null;
+    let buttonTextElement = null;
+    let buttonIsActive = false;
+    
+    
+    // planning if/then structure for status message
+    if(this.props.balance > 0){
+      /*
+       * start button says "Start Generating Transactions" but is disabled
+       *  notification bar to deposit funds is displayed
+       */
+    } else {
+      // Start button is enabled
+      if(this.props.isGeneratingTxs){
+	/*
+	 * once start button is clicked, button is grey to display info except 
+	 * when mouse hovers, then it turns red to indicate clickable 
+	 * stop (might get design tweaks)
+	 */
+	if(this.props.availableBalance == 0 && numTxsGenerated == 0) {
+	  // start button says "Waiting for available funds (~" + (numBlocksToNextUnlock * 2) + " minutes)"
 	}
+      } else {
+	// start button is enabled / green
       }
-    } else {
-      buttonTextElement = <>Start Generating Transactions</>;
-      buttonHandleContinue = props.startGeneratingTxs;
     }
     
-  } else {
-    if(props.fundsArePending){
+    
+    
+    if(this.props.balance > 0){
       
-      
-      // CONTINUE WORK HERE
-      
-      
+      buttonIsActive = true;
+      if(this.props.isGeneratingTxs){
+        if(this.state.mouseIsOnTxGenButton){
+          buttonTextElement = <>Pause transaction generation</>;
+          buttonHandleContinue = this.props.stopGeneratingTxs;
+        } else {
+  	if(this.props.isCycling){
+  	  if(numBlocksToNextUnlock > 0){
+  	    buttonTextElement = <>Cycling (~{AVERAGE_BLOCK_TIME * this.props.numBlocksToNextUnlock} minutes)</>
+  	  } else {
+  	    buttonTextElement = <>Cycling</>
+  	  }
+  	} else if (this.props.splitOutputs){
+  	  if(numBlocksToNextUnlock > 0){
+  	    buttonTextElement = <>Split outputs (~{AVERAGE_BLOCK_TIME * this.props.numBlocksToNextUnlock} minutes)</>
+  	  } else {
+  	    buttonTextElement = <>Split outputs</>
+  	  }
+  	}
+        }
+      } else {
+        buttonTextElement = <>Start Generating Transactions</>;
+        buttonHandleContinue = this.props.startGeneratingTxs;
+      }
       
     } else {
-      buttonTextElement= <>Start Generating Transactions</>
-      buttonIsActive=false;
+      if(this.props.fundsArePending){
+        
+        
+        
+        
+        
+        
+      } else {
+        buttonTextElement= <>Start Generating Transactions</>
+        buttonIsActive=false;
+      }
     }
-  }
-  
-  return(
-    <Page_Box className="wallet_page_box">
-      <div className="wallet_page_sections_container">
-        <Wallet_Page_Section label = "Balance" value={props.balance * XMR_AU_RATIO + " XMR"} />
-        <Wallet_Page_Section label = "Available balance" value={props.availableBalance * XMR_AU_RATIO + " XMR"} />
-        <Wallet_Page_Section label = "Transactions generated" value={props.transactionsGenerated} />
-        <Wallet_Page_Section label = "Total fees" value={props.totalFees * XMR_AU_RATIO + " XMR"} />
-        <div className="wallet_page_button_container">
-          <Home_UI_Button_Link 
-            handleClick = {buttonHandleContinue}
-            destination="/" 
-            isactive={buttonIsActive}
-            className={props.isGeneratingTxs ? "stop_tx_generation_color" : ""} 
-            onmouseover={(function() {this.mouseIsOnTxGenButton = true}).bind(this)}
-            onmouseout={(function() {this.mouseIsOnTxGenButton = false}).bind(this)}
-          >
-            {buttonTextElement}
-          </Home_UI_Button_Link>
+    
+    return(
+      <Page_Box className="wallet_page_box">
+        <div className="wallet_page_sections_container">
+          <Wallet_Page_Section label = "Balance" value={this.props.balance * XMR_AU_RATIO + " XMR"} />
+          <Wallet_Page_Section label = "Available balance" value={this.props.availableBalance * XMR_AU_RATIO + " XMR"} />
+          <Wallet_Page_Section label = "Transactions generated" value={this.props.transactionsGenerated} />
+          <Wallet_Page_Section label = "Total fees" value={this.props.totalFees * XMR_AU_RATIO + " XMR"} />
+          <div className="wallet_page_button_container">
+            <Home_UI_Button_Link 
+              handleClick = {buttonHandleContinue}
+              destination="/" 
+              isactive={buttonIsActive}
+              className={this.props.isGeneratingTxs ? "stop_tx_generation_color" : ""} 
+              onmouseover={(function() {this.setState({mouseIsOnTxGenButton: true})}).bind(this)}
+              onmouseout={(function() {this.setState({mouseIsOnTxGenButton: false})}).bind(this)}
+            >
+              {buttonTextElement}
+            </Home_UI_Button_Link>
+          </div>
         </div>
-      </div>
-    </Page_Box>
-  );
+      </Page_Box>
+    );
+  }
 }
 
 function Wallet_Page_Section(props) {
   return(
     <div className="wallet_page_section">
       <div className="wallet_page_section_label wallet_page_text">
-        {props.label}
+        {this.props.label}
       </div>
       <div className="wallet_page_section_value wallet_page_text">
-        {props.value}
+        {this.props.value}
       </div>
       <div className="horizontal_rule">
         <hr />
