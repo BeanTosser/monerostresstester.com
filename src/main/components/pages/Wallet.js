@@ -42,11 +42,11 @@ class Wallet extends React.Component {
   handleButtonClick(){
     if (this.transactionGenerationToggled){
       this.transactionGenerationToggled = false;
-      this.props.stopGeneratingTransactions();
+      this.props.stopGeneratingTxs();
     } else {
       this.transactionGenerationToggled = true;
       if(this.props.balance > 0){
-        this.props.startGeneratingTransactions();
+        this.props.startGeneratingTxs();
       }
     }
   }
@@ -93,7 +93,7 @@ class Wallet extends React.Component {
 
       if(this.transactionGenerationToggled) {
 	//if the "generate" button is toggled on
-	if(this.props.availableBalance == 0 && numTxsGenerated == 0) {
+	if(this.props.availableBalance == 0 && this.props.numTxsGenerated == 0) {
 	  /*
 	   * Wallet is waiting for an incoming TX for funding
 	   * 
@@ -108,7 +108,7 @@ class Wallet extends React.Component {
 	} else if(this.props.availableBalance > 0){
           //The wallet is funded and ready to send transactions
           
-          if(this.props.isGeneratingTxs){}
+          if(this.props.isGeneratingTxs){
             /* 
 	     * The wallet is in the middle of generating (or attempting to generate in the
 	     * case the the inbound funds have not yet arrived) TXs
@@ -129,13 +129,15 @@ class Wallet extends React.Component {
                * "Cycling outputs" + button time
                */
               if(this.props.isCycling){
-        	buttonTextElement = <>Cycling outputs 
+        	buttonTextElement = <>Cycling outputs</>
               }
               /*
                * if tx.getOutgoingTransfer().getDestinations().length > 1, start button says 
                * "Split " + numSplitOutputs + " new outputs" + button time
                */
-            
+              if(this.props.isSplitting ){
+        	buttonTextElement = <>Split {numSplitOutputs} new outputs (~{numBlocksToNextUnlock} minutes)</>
+              }
             
             }
           } else {
@@ -147,53 +149,11 @@ class Wallet extends React.Component {
             this.props.startGeneratingTxs();
           }
         }
+	buttonTextElement = <>Missing case/not accounted for?</>
       } else {
 	//The user has not pressed the button, but the wallet is (or will definitely be) funded
 	// start button is enabled / green
 	buttonTextElement = <>Start Generating Transactions</>
-      }
-    }
-    
-    
-    
-    if(this.props.balance > 0){
-      
-      buttonIsActive = true;
-      if(this.props.isGeneratingTxs){
-        if(this.state.mouseIsOnTxGenButton){
-          buttonTextElement = <>Pause transaction generation</>;
-          buttonHandleContinue = this.props.stopGeneratingTxs;
-        } else {
-  	if(this.props.isCycling){
-  	  if(numBlocksToNextUnlock > 0){
-  	    buttonTextElement = <>Cycling (~{AVERAGE_BLOCK_TIME * this.props.numBlocksToNextUnlock} minutes)</>
-  	  } else {
-  	    buttonTextElement = <>Cycling</>
-  	  }
-  	} else if (this.props.splitOutputs){
-  	  if(numBlocksToNextUnlock > 0){
-  	    buttonTextElement = <>Split outputs (~{AVERAGE_BLOCK_TIME * this.props.numBlocksToNextUnlock} minutes)</>
-  	  } else {
-  	    buttonTextElement = <>Split outputs</>
-  	  }
-  	}
-        }
-      } else {
-        buttonTextElement = <>Start Generating Transactions</>;
-        buttonHandleContinue = this.props.startGeneratingTxs;
-      }
-      
-    } else {
-      if(this.props.fundsArePending){
-        
-        
-        
-        
-        
-        
-      } else {
-        buttonTextElement= <>Start Generating Transactions</>
-        buttonIsActive=false;
       }
     }
     
@@ -226,10 +186,10 @@ function Wallet_Page_Section(props) {
   return(
     <div className="wallet_page_section">
       <div className="wallet_page_section_label wallet_page_text">
-        {this.props.label}
+        {props.label}
       </div>
       <div className="wallet_page_section_value wallet_page_text">
-        {this.props.value}
+        {props.value}
       </div>
       <div className="horizontal_rule">
         <hr />
@@ -237,3 +197,5 @@ function Wallet_Page_Section(props) {
     </div>
   );
 }
+
+export default Wallet;

@@ -126,7 +126,8 @@ class Home extends React.Component {
           numBlocksToNextUnlock = {this.props.numBlocksToNextUnlock}
           numBlocksToLastUnlock = {this.props.numBlocksToLastUnlock}
           isCycling = {this.props.isCycling}
-          splitOutputs = {this.state.splitOutputs}
+          isSplitting = {this.state.isSplitting}
+          numSplitOutputs = {this.state.numSplitOutputs}
         />;
         break;
     }

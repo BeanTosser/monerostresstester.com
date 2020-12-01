@@ -117,7 +117,7 @@ class App extends React.Component {
       currentHomePage: "Welcome",
       lastHomePage: "",
       isGeneratingTxs: false,
-      transactionsGenerated: 0,
+      numTxsGenerated: 0,
       totalFees: 0,
       enteredMnemonicIsValid: true,
       enteredHeightIsValid: true,
@@ -127,7 +127,10 @@ class App extends React.Component {
       depositQrCode: null,
       isAwaitingDeposit: false,
       numBlocksToNextUnlock: -1,
-      numBlocksToLastUnlock: -1
+      numBlocksToLastUnlock: -1,
+      isCycling: false,
+      isSplitting: false,
+      numSplitOutputs: 0
     };
   }
   
@@ -400,23 +403,26 @@ async generateWallet(){
         console.log("MoneroTxGenerator getNumBlocksToLastUnlock: " + numBlocksToLastUnlock);
         
         let isCycling = false;
-        let splitOutputs = false;
+        let isSplitting = false;
         
         if (tx.getOutgoingTransfer().getDestinations().length == 1) {
           isCycling = true;
+          isSplitting = false;
         } else if (tx.getOutgoingTransfer().getDestinations().length > 1) {
-          splitOutputs = true;
-        }
+          isCycling = false;
+          isSplitting = true;
+        } 
         
         that.setState({
-          transactionsGenerated: numTxsGenerated,
+          numTxsGenerated: numTxsGenerated,
+          numSplitOutputs: numSplitOutputs,
           balance: balance,
           availableBalance: unlockedBalance,
           totalFees: totalFees,
           numBlocksToNextUnlock: numBlocksToNextUnlock,
           numBlocksToLastUnlock: numBlocksToLastUnlock,
           isCycling: isCycling,
-          splitOutputs: splitOutputs
+          isSplitting: isSplitting
         });
         that.playMuscleAnimation.bind(that)();
       }
@@ -480,7 +486,7 @@ async generateWallet(){
       balance: 0,
       availableBalance: 0,
       isGeneratingTxs: false,
-      transactionsGenerated: 0,
+      numTxsGenerated: 0,
       totalFees: 0,
       enteredMnemonicIsValid: true,
       enteredHeightIsValid: true,
@@ -489,7 +495,9 @@ async generateWallet(){
       isAwaitingDeposit: false,
       numBlocksToNextUnlock: -1,
       numBlocksToLastUnlock: -1,
-      isCycling: isCycling
+      isCycling: false,
+      isSplitting: false,
+      numSplitOutputs: 0
     });
     this.txGenerator = null;
     this.walletUpdater = null;
@@ -651,7 +659,7 @@ async generateWallet(){
                 isGeneratingTxs = {this.state.isGeneratingTxs}
                 startGeneratingTxs = {this.startGeneratingTxs.bind(this)}
                 stopGeneratingTxs = {this.stopGeneratingTxs.bind(this)}
-                transactionsGenerated = {this.state.transactionsGenerated}
+                numTxsGenerated = {this.state.numTxsGenerated}
                 totalFees = {this.state.totalFees}
                 createDateConversionWallet = {this.createDateConversionWallet.bind(this)}
                 enteredMnemonicIsValid = {this.state.enteredMnemonicIsValid}
@@ -662,7 +670,8 @@ async generateWallet(){
                 numBlocksToNextUnlock = {this.state.numBlocksToNextUnlock}
                 numBlocksToLastUnlock = {this.state.numBlocksToLastUnlock}
                 isCycling = {this.state.isCycling}
-                splitOutputs = {this.state.splitOutputs}
+                isSplitting = {this.state.isSplitting}
+                numSplitOutputs = {this.state.numSplitOutputs}
               />} />
               <Route path="/backup" render={(props) => <Backup
                 {...props}
