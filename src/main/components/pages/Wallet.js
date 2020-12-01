@@ -36,6 +36,19 @@ class Wallet extends React.Component {
     this.state = {
       mouseIsOnTxGenButton: false
     }
+    this.transactionGenerationToggled = false;
+  }
+  
+  handleButtonClick(){
+    if (this.transactionGenerationToggled){
+      this.transactionGenerationToggled = false;
+      this.props.stopGeneratingTransactions();
+    } else {
+      this.transactionGenerationToggled = true;
+      if(this.props.balance > 0){
+        this.props.startGeneratingTransactions();
+      }
+    }
   }
   
   /*
@@ -54,7 +67,6 @@ class Wallet extends React.Component {
     // Typical time to add a new block to the chain (in minutes)
     let AVERAGE_BLOCK_TIME = 2;
     
-    let buttonHandleContinue = null;
     let buttonTextElement = null;
     let buttonIsActive = false;
     
@@ -68,31 +80,77 @@ class Wallet extends React.Component {
        *  notification bar to deposit funds is displayed
        */
       
-      //If the wallet just ran out of funds, 
+      buttonIsActive = false;
+      buttonTextElement = <>Start Generating Transactions</>
     } else {
       /*
        * The wallet is funded or has inbound funds
        * 
        * 
        */ 
-      if(this.props.isGeneratingTxs){
-	/*
-	 * The wallet is i the middle of generating (or attempting to generate in the
-	 * case the the inbound funds have not yet arrived) TXs
-	 * 
-	 * once start button is clicked, button is grey to display info except 
-	 * when mouse hovers, then it turns red to indicate clickable 
-	 * stop (might get design tweaks)
-	 */
+      
+      buttonIsActive = true;
+
+      if(this.transactionGenerationToggled) {
+	//if the "generate" button is toggled on
 	if(this.props.availableBalance == 0 && numTxsGenerated == 0) {
 	  /*
 	   * Wallet is waiting for an incoming TX for funding
 	   * 
 	   * start button says "Waiting for available funds (~" + (numBlocksToNextUnlock * 2) + " minutes)"
 	   */
-	} else if()
+	  if(numBlocksToNextUnlock === 0 || numBlocksToLastUnlock == undefined) {
+	    // We are on the last block before funds will become available. stop displaying time estimate.
+	    buttonTextElement = <>Waiting for available funds</>
+	  } else {
+	    buttonTextElement = <>Waiting for available funds (~{numBlocksToNextUnlock * AVERAGE_BLOCK_TIME} minutes)</>
+	  }
+	} else if(this.props.availableBalance > 0){
+          //The wallet is funded and ready to send transactions
+          
+          if(this.props.isGeneratingTxs){}
+            /* 
+	     * The wallet is in the middle of generating (or attempting to generate in the
+	     * case the the inbound funds have not yet arrived) TXs
+	     * 
+	     * once start button is clicked, button is grey to display info except 
+	     * when mouse hovers, then it turns red to indicate clickable 
+	     * stop (might get design tweaks)
+	     */
+            if(this.state.mouseIsOnTxGenButton){
+              buttonTextElement = <>Pause transaction generation</>
+            } else {
+              
+              
+              
+              //The complicated part
+              /*
+               * if tx.getOutgoingTransfer().getDestinations().length == 1, start button says 
+               * "Cycling outputs" + button time
+               */
+              if(this.props.isCycling){
+        	buttonTextElement = <>Cycling outputs 
+              }
+              /*
+               * if tx.getOutgoingTransfer().getDestinations().length > 1, start button says 
+               * "Split " + numSplitOutputs + " new outputs" + button time
+               */
+            
+            
+            }
+          } else {
+            /*
+             * wallet funds JUST became available and transactions have not started generating yet. 
+             * 
+             * Enable the TX generator
+             */ 
+            this.props.startGeneratingTxs();
+          }
+        }
       } else {
+	//The user has not pressed the button, but the wallet is (or will definitely be) funded
 	// start button is enabled / green
+	buttonTextElement = <>Start Generating Transactions</>
       }
     }
     
@@ -148,7 +206,7 @@ class Wallet extends React.Component {
           <Wallet_Page_Section label = "Total fees" value={this.props.totalFees * XMR_AU_RATIO + " XMR"} />
           <div className="wallet_page_button_container">
             <Home_UI_Button_Link 
-              handleClick = {buttonHandleContinue}
+              handleClick = {this.handleButtonClick.bind(this)}
               destination="/" 
               isactive={buttonIsActive}
               className={this.props.isGeneratingTxs ? "stop_tx_generation_color" : ""} 
