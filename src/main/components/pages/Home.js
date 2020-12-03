@@ -121,13 +121,14 @@ class Home extends React.Component {
           isGeneratingTxs = {this.props.isGeneratingTxs}
           startGeneratingTxs = {this.props.startGeneratingTxs}
           stopGeneratingTxs = {this.props.stopGeneratingTxs}
-          transactionsGenerated = {this.props.transactionsGenerated}
+          transactionsGenerated = {this.props.numTxsGenerated}
           totalFees = {this.props.totalFees}
           numBlocksToNextUnlock = {this.props.numBlocksToNextUnlock}
           numBlocksToLastUnlock = {this.props.numBlocksToLastUnlock}
           isCycling = {this.props.isCycling}
-          isSplitting = {this.state.isSplitting}
-          numSplitOutputs = {this.state.numSplitOutputs}
+          isSplitting = {this.props.isSplitting}
+          numSplitOutputs = {this.props.numSplitOutputs}
+          numTxsGenerated = {this.props.numTxsGenerated}
         />;
         break;
     }

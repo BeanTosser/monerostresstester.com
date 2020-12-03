@@ -90,20 +90,26 @@ class Wallet extends React.Component {
        */ 
       
       buttonIsActive = true;
-
+      
+      console.log("Available balance: " + this.props.availableBalance);
+      console.log("numTxsGenerated: " + this.props.numTxsGenerated);
+      console.log("transaction button depressed? " + this.transactionGenerationToggled);
+      console.log("numBlocksToNextUnlock: " + this.props.numBlocksToNextUnlock);
+      console.log("numBlocksToLastUnlock: " + this.props.numBlocksToLastUnlock);
+      
       if(this.transactionGenerationToggled) {
 	//if the "generate" button is toggled on
-	if(this.props.availableBalance == 0 && this.props.numTxsGenerated == 0) {
+	if(this.props.availableBalance == 0) {
 	  /*
 	   * Wallet is waiting for an incoming TX for funding
 	   * 
 	   * start button says "Waiting for available funds (~" + (numBlocksToNextUnlock * 2) + " minutes)"
 	   */
-	  if(numBlocksToNextUnlock === 0 || numBlocksToLastUnlock == undefined) {
+	  if(this.props.numBlocksToNextUnlock === 0 || this.props.numBlocksToLastUnlock == undefined) {
 	    // We are on the last block before funds will become available. stop displaying time estimate.
 	    buttonTextElement = <>Waiting for available funds</>
 	  } else {
-	    buttonTextElement = <>Waiting for available funds (~{numBlocksToNextUnlock * AVERAGE_BLOCK_TIME} minutes)</>
+	    buttonTextElement = <>Waiting for available funds (~{this.props.numBlocksToNextUnlock * AVERAGE_BLOCK_TIME} minutes)</>
 	  }
 	} else if(this.props.availableBalance > 0){
           //The wallet is funded and ready to send transactions
@@ -136,7 +142,7 @@ class Wallet extends React.Component {
                * "Split " + numSplitOutputs + " new outputs" + button time
                */
               if(this.props.isSplitting ){
-        	buttonTextElement = <>Split {numSplitOutputs} new outputs (~{numBlocksToNextUnlock} minutes)</>
+        	buttonTextElement = <>Split {numSplitOutputs} new outputs (~{this.props.numBlocksToNextUnlock} minutes)</>
               }
             
             }
@@ -148,8 +154,9 @@ class Wallet extends React.Component {
              */ 
             this.props.startGeneratingTxs();
           }
+        } else {
+	  buttonTextElement = <>Missing case/not accounted for?</>
         }
-	buttonTextElement = <>Missing case/not accounted for?</>
       } else {
 	//The user has not pressed the button, but the wallet is (or will definitely be) funded
 	// start button is enabled / green
@@ -162,7 +169,7 @@ class Wallet extends React.Component {
         <div className="wallet_page_sections_container">
           <Wallet_Page_Section label = "Balance" value={this.props.balance * XMR_AU_RATIO + " XMR"} />
           <Wallet_Page_Section label = "Available balance" value={this.props.availableBalance * XMR_AU_RATIO + " XMR"} />
-          <Wallet_Page_Section label = "Transactions generated" value={this.props.transactionsGenerated} />
+          <Wallet_Page_Section label = "Transactions generated" value={this.props.numTxsGenerated} />
           <Wallet_Page_Section label = "Total fees" value={this.props.totalFees * XMR_AU_RATIO + " XMR"} />
           <div className="wallet_page_button_container">
             <Home_UI_Button_Link 

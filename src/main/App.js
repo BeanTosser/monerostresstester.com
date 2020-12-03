@@ -126,8 +126,8 @@ class App extends React.Component {
       flexLogo: relaxingLogo,
       depositQrCode: null,
       isAwaitingDeposit: false,
-      numBlocksToNextUnlock: -1,
-      numBlocksToLastUnlock: -1,
+      numBlocksToNextUnlock: 0,
+      numBlocksToLastUnlock: 0,
       isCycling: false,
       isSplitting: false,
       numSplitOutputs: 0
@@ -430,6 +430,10 @@ async generateWallet(){
       // handle notifications of blocks added to the chain
       async onNewBlock(height, balance, unlockedBalance, numBlocksToNextUnlock, numBlocksToLastUnlock) {
         console.log("MoneroTxGeneratorListener.onNewBlock({height: " + height + ", balance: " + balance.toString() + ", unlockedBalance: " + unlockedBalance.toString() + ", numBlocksToNextUnlock: " + numBlocksToNextUnlock + ", numBlocksToLastUnlock: " + numBlocksToLastUnlock + "}");
+        that.setState({
+          numBlocksToNextUnlock: numBlocksToNextUnlock,
+          numBlocksToLastUnlock: numBlocksToLastUnlock
+        });
       }
     });
     
@@ -493,8 +497,8 @@ async generateWallet(){
       isAwaitingWalletVerification: false,
       depositQrCode: null,
       isAwaitingDeposit: false,
-      numBlocksToNextUnlock: -1,
-      numBlocksToLastUnlock: -1,
+      numBlocksToNextUnlock: 0,
+      numBlocksToLastUnlock: 0,
       isCycling: false,
       isSplitting: false,
       numSplitOutputs: 0
