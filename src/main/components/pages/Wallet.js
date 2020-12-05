@@ -105,7 +105,7 @@ class Wallet extends React.Component {
 	   * 
 	   * start button says "Waiting for available funds (~" + (numBlocksToNextUnlock * 2) + " minutes)"
 	   */
-	  if(this.props.numBlocksToNextUnlock === 0 || this.props.numBlocksToLastUnlock == undefined) {
+	  if(this.props.numBlocksToNextUnlock === 0 || this.props.numBlocksToLastUnlock === undefined) {
 	    // We are on the last block before funds will become available. stop displaying time estimate.
 	    buttonTextElement = <>Waiting for available funds</>
 	  } else {
@@ -135,6 +135,12 @@ class Wallet extends React.Component {
                * "Cycling outputs" + button time
                */
               if(this.props.isCycling){
+        	if(this.props.numBlocksToNextUnlock === 0 || this.props.numBlocksToLastUnlock === undefined) {
+      	          // We are on the last block before funds will become available. stop displaying time estimate.
+      	          buttonTextElement = <>Cycling outputs</>
+      	        } else {
+                  buttonTextElement = <>Cycling outputs (~{this.props.numBlocksToNextUnlock * AVERAGE_BLOCK_TIME} minutes)</>
+      	        }
         	buttonTextElement = <>Cycling outputs</>
               }
               /*
@@ -142,7 +148,12 @@ class Wallet extends React.Component {
                * "Split " + numSplitOutputs + " new outputs" + button time
                */
               if(this.props.isSplitting ){
-        	buttonTextElement = <>Split {numSplitOutputs} new outputs (~{this.props.numBlocksToNextUnlock} minutes)</>
+        	if(this.props.numBlocksToNextUnlock === 0 || this.props.numBlocksToLastUnlock === undefined) {
+      	          // We are on the last block before funds will become available. stop displaying time estimate.
+      	          buttonTextElement = <>Split {this.props.numSplitOutputs} new outputs</>
+      	        } else {
+                  buttonTextElement = <>Split {this.props.numSplitOutputs} new outputs (~{this.props.numBlocksToNextUnlock * AVERAGE_BLOCK_TIME} minutes)</>
+      	        }
               }
             
             }
