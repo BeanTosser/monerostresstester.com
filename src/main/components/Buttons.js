@@ -47,6 +47,8 @@ export function Home_UI_Button_Link(props) {
             props.setCurrentHomePage(props.destination);
           }
         }}
+        onMouseOver = {props.onMouseOver}
+        onMouseOut = {props.onMouseOut}
       >
         <div className="button_contents_container">
           {props.children}
