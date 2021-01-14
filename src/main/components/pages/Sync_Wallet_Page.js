@@ -21,7 +21,7 @@ export default function Sync_Wallet_Page(props) {
           destination={props.backDestination}
           setCurrentHomePage={props.setCurrentHomePage}
         />
-      </div>	
+      </div>  
     </Page_Box>
   );
   

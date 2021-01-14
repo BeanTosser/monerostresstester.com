@@ -44,7 +44,7 @@
 }
 
 .page_text_box_space {
-	height: calc(180px + var(--text-box-border-width) * 4);
+  height: calc(180px + var(--text-box-border-width) * 4);
 }
 
 .save_phrase_box {
@@ -52,7 +52,7 @@
 }
 
 .active_border {
-  border: var(--text-box-border-width) solid var(--text-entry-border-color);	
+  border: var(--text-box-border-width) solid var(--text-entry-border-color);  
 }
 
 .inactive_border {

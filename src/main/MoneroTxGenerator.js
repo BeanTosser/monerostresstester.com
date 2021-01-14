@@ -49,7 +49,7 @@ class MoneroTxGenerator {
   }
 
   getTotalFees() {
-	  return this.totalFees;
+    return this.totalFees;
   }
   
   /**

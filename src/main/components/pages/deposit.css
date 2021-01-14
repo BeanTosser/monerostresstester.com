@@ -1,11 +1,11 @@
 :root {
-	--deposit-page-box-width: 740px;
-	--address-box-margin: 0px;
-	--code-text-width: 660px;
-	--code-text-height: 100px;
-	--qr-size: 220px;
-	--checkmark-size: 64px;
-	--horizontal-button-margin: 42px;
+  --deposit-page-box-width: 740px;
+  --address-box-margin: 0px;
+  --code-text-width: 660px;
+  --code-text-height: 100px;
+  --qr-size: 220px;
+  --checkmark-size: 64px;
+  --horizontal-button-margin: 42px;
 }
 
 .deposit_page_box {
@@ -43,7 +43,7 @@ div {
 
 .qr_code_image {
   height: var(--qr-size);
-  width: var(--qr-size);	
+  width: var(--qr-size);  
 }
 
 img {

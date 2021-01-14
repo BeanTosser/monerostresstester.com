@@ -29,8 +29,8 @@ class Home extends React.Component {
     switch(this.props.currentHomePage){
       case "Welcome":
         renderItem =
-  	<Welcome
-  	  handleContinue={this.props.generateWallet}
+    <Welcome
+      handleContinue={this.props.generateWallet}
           handleBack={this.props.createDateConversionWallet}
           setCurrentHomePage={this.props.setCurrentHomePage}
           continueDestination="New_Wallet"
@@ -39,7 +39,7 @@ class Home extends React.Component {
         break;
       case "New_Wallet":
         renderItem =
-  	<New_Wallet 
+    <New_Wallet 
             text={this.props.walletPhrase}
             handleRegenerate={this.props.generateWallet}
             handleBack={this.props.resetState}
@@ -49,17 +49,17 @@ class Home extends React.Component {
           />;
         break;
       case "Confirm_Wallet":
-	if(this.props.forceWait){
-	  buttonContents=
-	    <div className="double_button_contents_container">
+  if(this.props.forceWait){
+    buttonContents=
+      <div className="double_button_contents_container">
               <span className="double_button_item_1">Creating wallet...</span>
               <span className="double_button_item_2"><Loading_Animation /></span>
             </div>
-	} else {
-	  buttonContents = <>Continue</>
-	}
+  } else {
+    buttonContents = <>Continue</>
+  }
         renderItem = 
-  	<Enter_Phrase_Page
+    <Enter_Phrase_Page
             header="Confirm your backup phrase" 
             handleTextChange={this.props.setEnteredPhrase} 
             handleContinue={this.props.confirmWallet}
@@ -72,17 +72,17 @@ class Home extends React.Component {
           />;
         break;
       case "Import_Wallet": 
-	if(this.props.forceWait){
-	  buttonContents =
-	  <div className="double_button_contents_container">
+  if(this.props.forceWait){
+    buttonContents =
+    <div className="double_button_contents_container">
             <span className="double_button_item_1">Importing wallet...</span>
             <span className="double_button_item_2"><Loading_Animation /></span>
           </div>
-	} else {
-	  buttonContents = <>Continue</>
-	}
+  } else {
+    buttonContents = <>Continue</>
+  }
         renderItem = 
-  	<Enter_Phrase_Page
+    <Enter_Phrase_Page
           header="Import existing wallet" 
           handleTextChange={this.props.setEnteredPhrase} 
           handleContinue={this.props.restoreWallet}
@@ -107,7 +107,7 @@ class Home extends React.Component {
         break;
       case "Sync_Wallet_Page":
         renderItem =
-  	<Sync_Wallet_Page
+    <Sync_Wallet_Page
             progress={this.props.walletSyncProgress}
             backDestination={this.props.lastHomePage}
             setCurrentHomePage={this.props.confirmAbortWalletSynchronization}
@@ -115,8 +115,8 @@ class Home extends React.Component {
         break;
       case "Wallet":
         renderItem =
-  	<Wallet
-  	  balance={this.props.balance}
+    <Wallet
+      balance={this.props.balance}
           availableBalance={this.props.availableBalance}
           isGeneratingTxs = {this.props.isGeneratingTxs}
           walletIsFunded = {this.props.walletIsFunded}

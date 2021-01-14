@@ -67,14 +67,14 @@ export function UI_Text_Link(props) {
     <div className="ui_link_text_container">
       <a 
         className="ui_text_link" 
-	onClick={function () {
-	  if(props.handleClick) {
-	    props.handleClick();
-	  }
-	  if(props.setCurrentHomePage){
-	    props.setCurrentHomePage(props.destination);
-	  }
-	}}
+  onClick={function () {
+    if(props.handleClick) {
+      props.handleClick();
+    }
+    if(props.setCurrentHomePage){
+      props.setCurrentHomePage(props.destination);
+    }
+  }}
       >
         <div>
           {props.link_text}
