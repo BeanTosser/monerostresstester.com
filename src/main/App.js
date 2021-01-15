@@ -654,7 +654,8 @@ async generateWallet(){
                 path="/backup" 
                 render={(props) => <Backup
                   {...props}
-                />} />
+                />}
+              />
               <Route 
                 path="/deposit" 
                 render={() => <Deposit
@@ -664,12 +665,18 @@ async generateWallet(){
                   setCurrentHomePage = {this.setCurrentHomePage.bind(this)}
                 />}
               />
-              <Route path="/sign_out" render={(props) => <SignOut
-                {...props}
-              />} />
-              <Route path="/withdraw" render={(props) => <Withdraw 
-                {...props}
-              />} />
+              <Route 
+                path="/sign_out" 
+                render={(props) => <SignOut
+                  {...props}
+                />}
+              />
+              <Route 
+                path="/withdraw" 
+                render={(props) => <Withdraw 
+                  {...props}
+                />}
+               />
               <Route component={default_page} />
             </Switch>
           </Router>
@@ -693,7 +700,7 @@ function default_page(){
   return <h1>ERROR - invalid url path!</h1>
 }
             
-/**
+/*
  * Print sync progress every X blocks.
  */
 class walletListener extends MoneroWalletListener {
@@ -706,8 +713,14 @@ class walletListener extends MoneroWalletListener {
     this.walletIsSynchronized = false;
   }
               
+  /*
+   * When the wallet listener is notified of a synchronization update,
+   * inform the main App component of the new progress percentage
+   */
   onSyncProgress(height, startHeight, endHeight, percentDone, message) {
     this.callingComponent.setCurrentSyncProgress(percentDone*100); 
+    
+    // Do-nothing code??? lastIncrement never used for anything
     if (percentDone >= this.lastIncrement + this.syncResolution) {
       this.lastIncrement += this.syncResolution;
     }
