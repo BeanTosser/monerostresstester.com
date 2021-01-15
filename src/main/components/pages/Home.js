@@ -1,5 +1,8 @@
+// React
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+// CSS
 import './home.css';
 
 // Import home sub-pages
@@ -9,6 +12,7 @@ import Sync_Wallet_Page from './Sync_Wallet_Page.js';
 import Enter_Phrase_Page from './Enter_Phrase_Page.js';
 import Wallet from "./Wallet.js";
 
+//Components
 import {Home_UI_Button_Link, UI_Text_Link, Regenerate_Phrase_Button} from '../Buttons.js';
 import {Page_Box, Page_Text_Box, Page_Text_Entry, Header, Progress_Bar, Main_Content, Loading_Animation} from '../Widgets.js';
 
@@ -28,9 +32,8 @@ class Home extends React.Component {
     let buttonContents = null;
     switch(this.props.currentHomePage){
       case "Welcome":
-        renderItem =
-    <Welcome
-      handleContinue={this.props.generateWallet}
+        renderItem = <Welcome
+          handleContinue={this.props.generateWallet}
           handleBack={this.props.createDateConversionWallet}
           setCurrentHomePage={this.props.setCurrentHomePage}
           continueDestination="New_Wallet"
@@ -38,51 +41,47 @@ class Home extends React.Component {
         />;
         break;
       case "New_Wallet":
-        renderItem =
-    <New_Wallet 
-            text={this.props.walletPhrase}
-            handleRegenerate={this.props.generateWallet}
-            handleBack={this.props.resetState}
-            continueDestination="Confirm_Wallet"
-            backDestination="Welcome"
-            setCurrentHomePage = {this.props.setCurrentHomePage}
-          />;
+        renderItem = <New_Wallet 
+          text={this.props.walletPhrase}
+          handleRegenerate={this.props.generateWallet}
+          handleBack={this.props.resetState}
+          continueDestination="Confirm_Wallet"
+          backDestination="Welcome"
+          setCurrentHomePage = {this.props.setCurrentHomePage}
+        />;
         break;
       case "Confirm_Wallet":
-  if(this.props.forceWait){
-    buttonContents=
-      <div className="double_button_contents_container">
+        if(this.props.forceWait){
+          buttonContents = 
+            <div className="double_button_contents_container">
               <span className="double_button_item_1">Creating wallet...</span>
               <span className="double_button_item_2"><Loading_Animation /></span>
             </div>
-  } else {
-    buttonContents = <>Continue</>
-  }
-        renderItem = 
-    <Enter_Phrase_Page
-            header="Confirm your backup phrase" 
-            handleTextChange={this.props.setEnteredPhrase} 
-            handleContinue={this.props.confirmWallet}
-            backDestination="New_Wallet"
-            handleBack={this.props.cancelConfirmation}
-            setCurrentHomePage={this.props.setCurrentHomePage}
-            buttonsAreActive={this.props.enteredMnemonicIsValid && !this.props.forceWait}
-            isValid={this.props.enteredMnemonicIsValid}
-            buttonContents = {buttonContents}
-          />;
+        } else {
+          buttonContents = <>Continue</>
+        }
+        renderItem = <Enter_Phrase_Page
+          header="Confirm your backup phrase" 
+          handleTextChange={this.props.setEnteredPhrase} 
+          handleContinue={this.props.confirmWallet}
+          backDestination="New_Wallet"
+          handleBack={this.props.cancelConfirmation}
+          setCurrentHomePage={this.props.setCurrentHomePage}
+          buttonsAreActive={this.props.enteredMnemonicIsValid && !this.props.forceWait}
+          isValid={this.props.enteredMnemonicIsValid}
+          buttonContents = {buttonContents}
+        />;
         break;
       case "Import_Wallet": 
-  if(this.props.forceWait){
-    buttonContents =
-    <div className="double_button_contents_container">
+        if(this.props.forceWait){
+          buttonContents = <div className="double_button_contents_container">
             <span className="double_button_item_1">Importing wallet...</span>
             <span className="double_button_item_2"><Loading_Animation /></span>
           </div>
-  } else {
-    buttonContents = <>Continue</>
-  }
-        renderItem = 
-    <Enter_Phrase_Page
+        } else {
+          buttonContents = <>Continue</>
+        }
+        renderItem = <Enter_Phrase_Page
           header="Import existing wallet" 
           handleTextChange={this.props.setEnteredPhrase} 
           handleContinue={this.props.restoreWallet}
@@ -106,17 +105,15 @@ class Home extends React.Component {
         </Enter_Phrase_Page>;
         break;
       case "Sync_Wallet_Page":
-        renderItem =
-    <Sync_Wallet_Page
-            progress={this.props.walletSyncProgress}
-            backDestination={this.props.lastHomePage}
-            setCurrentHomePage={this.props.confirmAbortWalletSynchronization}
-          />;
+        renderItem = <Sync_Wallet_Page
+          progress={this.props.walletSyncProgress}
+          backDestination={this.props.lastHomePage}
+          setCurrentHomePage={this.props.confirmAbortWalletSynchronization}
+        />;
         break;
       case "Wallet":
-        renderItem =
-    <Wallet
-      balance={this.props.balance}
+        renderItem = <Wallet
+          balance={this.props.balance}
           availableBalance={this.props.availableBalance}
           isGeneratingTxs = {this.props.isGeneratingTxs}
           walletIsFunded = {this.props.walletIsFunded}
@@ -127,6 +124,7 @@ class Home extends React.Component {
         />;
         break;
     }
+    
     return (
       <div id="home">   
         {renderItem} 
@@ -134,31 +132,5 @@ class Home extends React.Component {
     );
   }
 }
-
-/*
-function Confirm_Phrase() {
-  return (
-
-  );
-}
-
-function Backup_Phrase() {
-  return (
-
-  );
-}
-
-function Synchronize_Wallet() {
-  return (
-
-  );
-}
-
-function Generate_Transactions() {
-  return (
-
-  );
-}
-*/
 
 export default Home;
