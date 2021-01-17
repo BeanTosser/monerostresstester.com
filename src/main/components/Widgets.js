@@ -16,7 +16,11 @@ export function Progress_Bar(props) {
   );
 }
 
-// A generic container for the common box format of most of the site pages
+/*
+ * Page_Box is a generic container for the common box format of most of the site pages
+ * It is essentially a convenient way to universally apply the standard page box properties to
+ * all page box instances
+ */
 export function Page_Box(props) {
   return (
     <div className={(props.className ? props.className + " " : "") + "page_box"}>
