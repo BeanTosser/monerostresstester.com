@@ -608,6 +608,50 @@ async generateWallet(){
   }
   
   render(){
+    // All of the non-home pages need to redirect to "/" if the user has not created or restored a wallet yet
+    let nonHomeRouteElement = null;
+    if(this.state.currentHomePage == "Wallet"){
+      nonHomeRouteElement =
+        <>
+          <Route 
+            path="/backup" 
+            render={(props) => <Backup
+              {...props}
+            />}
+          />
+          <Route 
+            path="/deposit" 
+            render={() => <Deposit
+              depositQrCode = {this.state.depositQrCode}
+              walletAddress = {this.walletAddress}
+              xmrWasDeposited = {!this.state.isAwaitingDeposit}
+              setCurrentHomePage = {this.setCurrentHomePage.bind(this)}
+            />}
+          />
+          <Route 
+            path="/sign_out" 
+            render={(props) => <SignOut
+              {...props}
+            />}
+          />
+          <Route 
+            path="/withdraw" 
+            render={(props) => <Withdraw 
+              {...props}
+            />}
+           />
+       </>
+    } else { 
+      // If a wallet is NOT YET loaded, all non-home pages should redirect to home.     
+      nonHomeRouteElement =
+        <>
+          <Redirect
+            from = "/*" 
+            to = "/"
+          />
+       </>
+    }
+    
     if(this.animationIsLoaded){
       return(
         <div id="app_container">
@@ -650,33 +694,7 @@ async generateWallet(){
                   forceWait = {this.state.isAwaitingWalletVerification}
                 />}
               />
-              <Route 
-                path="/backup" 
-                render={(props) => <Backup
-                  {...props}
-                />}
-              />
-              <Route 
-                path="/deposit" 
-                render={() => <Deposit
-                  depositQrCode = {this.state.depositQrCode}
-                  walletAddress = {this.walletAddress}
-                  xmrWasDeposited = {!this.state.isAwaitingDeposit}
-                  setCurrentHomePage = {this.setCurrentHomePage.bind(this)}
-                />}
-              />
-              <Route 
-                path="/sign_out" 
-                render={(props) => <SignOut
-                  {...props}
-                />}
-              />
-              <Route 
-                path="/withdraw" 
-                render={(props) => <Withdraw 
-                  {...props}
-                />}
-               />
+              {nonHomeRouteElement}
               <Route component={default_page} />
             </Switch>
           </Router>
