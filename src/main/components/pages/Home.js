@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './home.css';
 
 // Import home sub-pages
 import Welcome from './Welcome.js';
-import New_Wallet from './New_Wallet.js';
+import Save_Phrase_Page from './Save_Phrase_Page.js';
 import Sync_Wallet_Page from './Sync_Wallet_Page.js';
 import Enter_Phrase_Page from './Enter_Phrase_Page.js';
 import Wallet from "./Wallet.js";
@@ -24,13 +23,13 @@ function Home(props) {
           handleContinue={props.generateWallet}
           handleBack={props.createDateConversionWallet}
           setCurrentHomePage={props.setCurrentHomePage}
-          continueDestination="New_Wallet"
+          continueDestination="Save_Phrase_Page"
           backDestination="Import_Wallet"
         />;
       break;
-    case "New_Wallet":
+    case "Save_Phrase_Page":
       renderItem =
-        <New_Wallet 
+        <Save_Phrase_Page 
           text={props.walletPhrase}
           handleRegenerate={props.generateWallet}
           handleBack={props.resetState}
@@ -54,7 +53,7 @@ function Home(props) {
           header="Confirm your backup phrase" 
           handleTextChange={props.setEnteredPhrase} 
           handleContinue={props.confirmWallet}
-          backDestination="New_Wallet"
+          backDestination="Save_Phrase_Page"
           handleBack={props.cancelConfirmation}
           setCurrentHomePage={props.setCurrentHomePage}
           buttonsAreActive={props.enteredMnemonicIsValid && !props.forceWait}

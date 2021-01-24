@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './home.css';
-import './new_wallet.css';
+import './save_phrase_page.css';
 import {Page_Box, Page_Text_Box, Main_Content, Header, Loading_Animation} from '../Widgets.js';
 import {UI_Text_Link, UI_Button_Link} from '../Buttons.js';
 
-export default function New_Wallet(props) {
+export default function Save_Phrase_Page(props) {
   
   let mainContent = null;
+  let marginContent = undefined;
+  let buttonLinks = undefined;
   
   if (props.text) {
     mainContent = (
@@ -16,7 +17,6 @@ export default function New_Wallet(props) {
       </Main_Content>
     );
   } else {
-  
     mainContent = (
       <Main_Content>
         <div className="page_text_box_space">
@@ -26,14 +26,16 @@ export default function New_Wallet(props) {
     );
   }
   
-  return(
-    <Page_Box className = "home_subpage_box_flex">
-      <Header 
-        text="Save your backup phrase" 
-        margin_content=<Regenerate_Phrase_Button handleClick={props.handleRegenerate}/>
-      />
-      {mainContent}
-      <div className="save_phrase_box_bottom_margin"></div>
+  if(!props.omit_buttons){ // The new wallet and backup pages are nearly identical EXCEPT backup lacks buttons
+    marginContent = (
+      <div>
+        <div className = "sub_title">
+          Do not lose your backup phrase
+        </div>
+        <Regenerate_Phrase_Button handleClick={props.handleRegenerate}/>
+      </div>
+    );
+    buttonLinks = (
       <div className="home_button_links">
         <UI_Button_Link
           destination={props.continueDestination} 
@@ -50,6 +52,24 @@ export default function New_Wallet(props) {
           handleClick={props.handleBack} 
           setCurrentHomePage = {props.setCurrentHomePage}/>
       </div>
+    );
+  } else {
+    marginContent = (
+      <div className = "sub_title">
+        Do not lose your backup phrase
+      </div>
+    );
+  }
+  
+  return(
+    <Page_Box className = "page_box_flex">
+      <Header 
+        text="Save your backup phrase" 
+        margin_content = {marginContent}
+      />
+      {mainContent}
+      <div className="save_phrase_box_bottom_margin"></div>
+      {buttonLinks}
     </Page_Box>
   );
 }

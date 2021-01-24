@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 
 import {Page_Box, Header, Main_Content, Progress_Bar, Loading_Animation} from '../Widgets.js';
 import {UI_Text_Link} from '../Buttons.js';
-import './home.css';
 
 export default function Sync_Wallet_Page(props) {
   

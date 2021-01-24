@@ -6,7 +6,7 @@ import Banner from "./components/Banner.js";
 import Home from "./components/pages/Home.js";
 import Deposit from "./components/pages/Deposit.js";
 import SignOut from "./components/pages/SignOut.js";
-import Backup from "./components/pages/Backup.js";
+import Save_Phrase_Page from "./components/pages/Save_Phrase_Page.js";
 import Withdraw from "./components/pages/Withdraw.js";
 import {Loading_Animation, getLoadingAnimationFile} from "./components/Widgets.js";
 
@@ -687,8 +687,9 @@ async generateWallet(){
                 forceWait = {this.state.isAwaitingWalletVerification}
                 transactionStatusMessage = {this.state.transactionStatusMessage}
               />} />
-              <Route path="/backup" render={(props) => <Backup
-                {...props}
+              <Route path="/backup" render={() => <Save_Phrase_Page 
+        	omit_buttons = {true} 
+                text = {this.state.walletPhrase}
               />} />
               <Route path="/deposit" render={() => <Deposit
                 depositQrCode = {this.state.depositQrCode}

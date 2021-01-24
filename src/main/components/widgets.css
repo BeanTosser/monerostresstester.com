@@ -24,6 +24,7 @@
   padding-top: 44px;
   margin: 0;
   line-height: 33px;
+  text-align: center;
 }
 
 .header_text {
@@ -31,8 +32,8 @@
 }
 
 .header_bottom_margin {
-  height: 48px;
   position: relative;
+  display: block;
 }
 
 .text_box {
