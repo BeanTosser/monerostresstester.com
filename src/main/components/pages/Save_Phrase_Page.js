@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './save_phrase_page.css';
 import {Page_Box, Page_Text_Box, Main_Content, Header, Loading_Animation} from '../Widgets.js';
 import {UI_Text_Link, UI_Button_Link} from '../Buttons.js';
-
+import warningImage from '../../img/warning.png'
 export default function Save_Phrase_Page(props) {
   
   let mainContent = null;
@@ -30,6 +30,10 @@ export default function Save_Phrase_Page(props) {
     marginContent = (
       <div>
         <div className = "sub_title">
+          <img 
+            src = {warningImage}
+            alt = "Caution sign"
+          />
           Do not lose your backup phrase
         </div>
         <Regenerate_Phrase_Button handleClick={props.handleRegenerate}/>
