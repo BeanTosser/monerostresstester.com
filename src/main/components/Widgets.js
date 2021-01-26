@@ -67,6 +67,14 @@ export function Page_Text_Box(props) {
   );
 }
 
+export function Page_Box_Margin(props){
+  if (props.height){
+    return <div style={{minHeight: props.height}}>&nbsp;</div>;
+  } else {
+    return <div className="Standard_Page_Box_Margin">&nbsp;</div>;
+  }
+}
+
 export function Deposit_Address_Text_Box(props) {
   return(
     <textarea 

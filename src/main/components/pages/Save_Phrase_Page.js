@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './save_phrase_page.css';
-import {Page_Box, Page_Text_Box, Main_Content, Header, Loading_Animation} from '../Widgets.js';
+import {Page_Box, Page_Box_Margin, Page_Text_Box, Main_Content, Header, Loading_Animation} from '../Widgets.js';
 import {UI_Text_Link, UI_Button_Link} from '../Buttons.js';
 import warningImage from '../../img/warning.png'
 export default function Save_Phrase_Page(props) {
@@ -40,6 +40,7 @@ export default function Save_Phrase_Page(props) {
             Do not lose your backup phrase
           </span>
         </div>
+        <Page_Box_Margin />
         <Regenerate_Phrase_Button handleClick={props.handleRegenerate}/>
       </div>
     );
