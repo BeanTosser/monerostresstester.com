@@ -47,6 +47,7 @@
   line-height: 42px;
   width: calc(100% - var(--text-box-border-width)*3);
   height: 180px;
+  margin-bottom: 42px;
 }
 
 .page_text_box_space {

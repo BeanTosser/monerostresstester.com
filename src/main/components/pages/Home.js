@@ -41,9 +41,9 @@ function Home(props) {
     case "Confirm_Wallet":
       if(props.forceWait){
         buttonContents=
-          <div className="double_button_contents_container">
-            <span className="double_button_item_1">Creating wallet...</span>
-            <span className="double_button_item_2"><Loading_Animation /></span>
+          <div className="center_double_elements_container">
+            <span className="center_double_elements_item_1">Creating wallet...</span>
+            <span className="center_double_elements_item_2"><Loading_Animation /></span>
           </div>
 	} else {
 	  buttonContents = <>Continue</>
@@ -64,9 +64,9 @@ function Home(props) {
     case "Import_Wallet": 
       if(props.forceWait){
         buttonContents =
-          <div className="double_button_contents_container">
-            <span className="double_button_item_1">Importing wallet...</span>
-            <span className="double_button_item_2"><Loading_Animation /></span>
+          <div className="center_double_elements_container">
+            <span className="center_double_elements_item_1">Importing wallet...</span>
+            <span className="center_double_elements_item_2"><Loading_Animation /></span>
           </div>
       } else {
         buttonContents = <>Continue</>

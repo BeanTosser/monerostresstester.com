@@ -6,7 +6,7 @@ import {UI_Button_Link, UI_Text_Link} from '../Buttons.js';
 
 export default function Enter_Phrase_Page(props) {
   return(
-    <Page_Box className="home_subpage_box_flex">
+    <Page_Box className="page_box_flex">
       <Header text={props.header}/>
       <Main_Content>
       	<Page_Text_Entry 

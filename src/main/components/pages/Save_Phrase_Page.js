@@ -29,12 +29,16 @@ export default function Save_Phrase_Page(props) {
   if(!props.omit_buttons){ // The new wallet and backup pages are nearly identical EXCEPT backup lacks buttons
     marginContent = (
       <div>
-        <div className = "sub_title">
+        <div className = "sub_title" style = {{display: "flex", flexDirection: "row"}}>
+          <span>
           <img 
             src = {warningImage}
             alt = "Caution sign"
           />
-          Do not lose your backup phrase
+          </span>
+          <span>
+            Do not lose your backup phrase
+          </span>
         </div>
         <Regenerate_Phrase_Button handleClick={props.handleRegenerate}/>
       </div>

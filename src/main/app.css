@@ -69,3 +69,26 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.center_double_elements_container {
+  height: 100%;
+  line-height: var(--button-height)
+}
+
+.center_double_elements_container > * {
+  line-height: var(--button-height);
+  height: 100%;
+  position: relative;
+}
+
+.center_double_elements_item_1 {
+  position: absolute;
+  width: var(--item-width);
+  right: 0;
+}
+.center_double_elements_item_2 {
+  width: calc(var(--loading-animation-size) + var(--spinner-right-margin));
+  margin-right: var(--spinner-right-margin);
+  float: right;
+}
+
