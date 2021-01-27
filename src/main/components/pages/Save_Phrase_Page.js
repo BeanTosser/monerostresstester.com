@@ -7,7 +7,7 @@ import warningImage from '../../img/warning.png'
 export default function Save_Phrase_Page(props) {
   
   let mainContent = null;
-  let marginContent = undefined;
+  let regenerateButtonSpace = undefined;
   let buttonLinks = undefined;
   
   if (props.text) {
@@ -27,23 +27,12 @@ export default function Save_Phrase_Page(props) {
   }
   
   if(!props.omit_buttons){ // The new wallet and backup pages are nearly identical EXCEPT backup lacks buttons
-    marginContent = (
-      <div>
-        <div className = "sub_title" style = {{display: "flex", flexDirection: "row"}}>
-          <span>
-          <img 
-            src = {warningImage}
-            alt = "Caution sign"
-          />
-          </span>
-          <span>
-            Do not lose your backup phrase
-          </span>
-        </div>
-        <Page_Box_Margin />
-        <Regenerate_Phrase_Button handleClick={props.handleRegenerate}/>
+    regenerateButtonSpace = (
+      <div style = {{width: "100%"}}>
+        <Regenerate_Phrase_Button handleClick = {props.handleRegenerate} />
       </div>
     );
+    
     buttonLinks = (
       <div className="home_button_links">
         <UI_Button_Link
@@ -62,22 +51,35 @@ export default function Save_Phrase_Page(props) {
           setCurrentHomePage = {props.setCurrentHomePage}/>
       </div>
     );
-  } else {
-    marginContent = (
-      <div className = "sub_title">
-        Do not lose your backup phrase
-      </div>
-    );
   }
   
   return(
     <Page_Box className = "page_box_flex">
       <Header 
-        text="Save your backup phrase" 
-        margin_content = {marginContent}
+        text="Save your backup phrase"
       />
+      
+      <Page_Box_Margin />
+      
+      <div className = "sub_title" style = {{display: "flex", flexDirection: "row"}}>
+        <span>
+        <img 
+          src = {warningImage}
+          alt = "Caution sign"
+        />
+        </span>
+        <span>
+          Do not lose your backup phrase
+        </span>
+      </div>
+      
+      <Page_Box_Margin />
+      
+      {regenerateButtonSpace}
       {mainContent}
-      <div className="save_phrase_box_bottom_margin"></div>
+      
+      <Page_Box_Margin />
+      
       {buttonLinks}
     </Page_Box>
   );

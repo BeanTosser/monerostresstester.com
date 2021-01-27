@@ -29,15 +29,6 @@
   text-align: center;
 }
 
-.header_text {
-  text-align: center;
-}
-
-.header_bottom_margin {
-  position: relative;
-  display: block;
-}
-
 .text_box {
   background-color: var(--text-box-background-color);
   color: var(--text-box-text-color);
@@ -104,7 +95,6 @@
 
 .enter_restore_height_box {
   background-color: var(--text-entry-background-color);
-  margin-top: 42px;
   height: 56px;
 }
 

@@ -152,17 +152,9 @@ export function Main_Content(props) {
 }
 
 export function Header(props) {
-  let bottomMargin = {};
-  bottomMargin = <div className="header_bottom_margin">
-                   {props.margin_content}
-                 </div>
-  
   return (
     <div className="header">
-      <div className="header_text">
-        {props.text}
-      </div>
-      {bottomMargin}
+      {props.text}
     </div>
   );
 }
