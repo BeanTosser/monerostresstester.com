@@ -4,6 +4,7 @@ import './save_phrase_page.css';
 import {Page_Box, Page_Box_Margin, Page_Text_Box, Main_Content, Header, Loading_Animation} from '../Widgets.js';
 import {UI_Text_Link, UI_Button_Link} from '../Buttons.js';
 import warningImage from '../../img/warning.png'
+
 export default function Save_Phrase_Page(props) {
   
   let mainContent = null;
@@ -64,6 +65,7 @@ export default function Save_Phrase_Page(props) {
       <div className = "sub_title" style = {{display: "flex", flexDirection: "row"}}>
         <span>
         <img 
+          className = "warning_image"
           src = {warningImage}
           alt = "Caution sign"
         />

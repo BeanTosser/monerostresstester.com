@@ -6,6 +6,7 @@
   --app-content-bg-color: #ece4d4;
   --app-bg-color: #eaf0f0;
   --home-page-box-width: 900px;
+  --sub-title-font-size: 26px;
 }
 
 .vertical_center {
@@ -61,7 +62,7 @@ body {
 }
 
 .sub_title {
-  font-size: 26px;
+  font-size: var(--sub-title-font-size);
   margin: 0 auto;
   text-align: center;
   display: flex;
