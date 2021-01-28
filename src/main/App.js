@@ -8,12 +8,13 @@ import Deposit from "./components/pages/Deposit.js";
 import SignOut from "./components/pages/SignOut.js";
 import Save_Phrase_Page from "./components/pages/Save_Phrase_Page.js";
 import Withdraw from "./components/pages/Withdraw.js";
-import {Loading_Animation, getLoadingAnimationFile} from "./components/Widgets.js";
+import {Notification_Bar, Loading_Animation, getLoadingAnimationFile} from "./components/Widgets.js";
 
 import QR_Code from "./components/QR_Code.js";
 import qrcode from './qrcode.js';
 
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
+import { BrowserRouter as Link, NavLink } from "react-router-dom";
 import MoneroTxGenerator from './MoneroTxGenerator.js';
 import MoneroTxGeneratorListener from './MoneroTxGeneratorListener.js';
 
@@ -644,9 +645,25 @@ async generateWallet(){
     this.setState({
       isAwaitingDeposit: true
     });
+    this.setCurrentHomePage("/deposit");
   }
   
   render(){
+    let notificationBar = null;
+    
+    if(this.state.walletIsSynced && !(this.state.balance > 0)){
+      notificationBar = (
+	<Notification_Bar content = {
+	  <>
+            No funds deposited
+            <a onClick = {this.notifyIntentToDeposit.bind(this)}>
+              Click to deposit
+            </a>
+          </>
+	} />
+      );
+    }
+    
     if(this.animationIsLoaded){
       return(
         <div id="app_container">
@@ -656,6 +673,7 @@ async generateWallet(){
               flexLogo = {this.state.flexLogo}
               notifyIntentToDeposit = {this.notifyIntentToDeposit.bind(this)}
             />
+            {notificationBar}
             <Switch>
               <Route exact path="/" render={() => <Home
                 generateWallet={this.generateWallet.bind(this)}

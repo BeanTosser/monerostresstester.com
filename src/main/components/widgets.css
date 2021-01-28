@@ -37,6 +37,7 @@
 
 .standard_page_box_margin {
 	min-height: var(--standard-margin);
+	height: var(--standard-margin);
 }
 
 .page_text_box {
@@ -44,7 +45,6 @@
   line-height: 42px;
   width: calc(100% - var(--text-box-border-width)*3);
   height: 180px;
-  margin-bottom: 42px;
 }
 
 .page_text_box_space {

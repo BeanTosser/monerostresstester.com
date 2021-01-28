@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './widgets.css';
 
 import loadingAnimation from '../img/loadingAnimation.gif';
+import { BrowserRouter as Link, NavLink } from "react-router-dom";
 
 export function Progress_Bar(props) {
   const progressStyle = {
@@ -69,10 +70,18 @@ export function Page_Text_Box(props) {
 
 export function Page_Box_Margin(props){
   if (props.height){
-    return <div style={{minHeight: props.height}}>&nbsp;</div>;
+    return <div style={{minHeight: props.height, fontSize: props.height}}>&nbsp;</div>;
   } else {
-    return <div className="Standard_Page_Box_Margin">&nbsp;</div>;
+    return <div className="standard_page_box_margin"></div>;
   }
+}
+
+export function Notification_Bar(props){
+  return(
+    <div className = "notification_bar">
+      {props.content}
+    </div>
+  );
 }
 
 export function Deposit_Address_Text_Box(props) {
