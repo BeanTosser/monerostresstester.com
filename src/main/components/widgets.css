@@ -155,9 +155,13 @@ textarea {
   cursor: pointer;
 }
 
-.page_box_line_field_text {
+.page_box_line_field {
   display: flex;
   font-size: 16px;
+}
+
+.page_box_line_field_text {
+	word-break: break-word;
 }
 
 .lines_page_container {
@@ -168,6 +172,7 @@ textarea {
   width: 100%;
 }
 
-.horizontal_fields_page_text {
+.page_box_line_field_text_container {
   font-size: 24px;
+  display: inline-block;
 }
