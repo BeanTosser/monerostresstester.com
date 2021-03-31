@@ -665,7 +665,7 @@ async generateWallet(){
     this.setState({
       isAwaitingDeposit: true
     });
-    this.setCurrentSitePage("/deposit");
+    this.setCurrentSitePage("Deposit");
   }
   
   render(){
@@ -700,61 +700,67 @@ async generateWallet(){
             />
             {notificationBar}
             <Switch>
-              <Route exact path="/" render={() => <Home
-                generateWallet={this.generateWallet.bind(this)}
-                confirmWallet={this.confirmWallet.bind(this)}
-                restoreWallet={this.restoreWallet.bind(this)}
-                setEnteredPhrase={this.setEnteredPhrase.bind(this)}
-                logout={this.logout.bind(this)}
-                walletSyncProgress = {this.state.walletSyncProgress}
-                setRestoreHeight = {this.setRestoreHeight.bind(this)}
-                walletPhrase = {this.state.walletPhrase}
-                currentHomePage = {this.state.currentHomePage}
-                balance = {this.state.balance}
-                setCurrentHomePage = {this.setCurrentHomePage.bind(this)}
-                lastHomePage = {this.lastHomePage}
-                availableBalance = {this.state.availableBalance}
-                confirmAbortWalletSynchronization = {this.confirmAbortWalletSynchronization.bind(this)}
-                coreModuleLoaded = {this.state.coreModuleLoaded}
-                keysModuleLoaded = {this.state.keysModuleLoaded}
-                isGeneratingTxs = {this.state.isGeneratingTxs}
-                startGeneratingTxs = {this.startGeneratingTxs.bind(this)}
-                stopGeneratingTxs = {this.stopGeneratingTxs.bind(this)}
-                transactionsGenerated = {this.state.transactionsGenerated}
-                totalFees = {this.state.totalFees}
-                createDateConversionWallet = {this.createDateConversionWallet.bind(this)}
-                enteredMnemonicIsValid = {this.state.enteredMnemonicIsValid}
-                enteredHeightIsValid = {this.state.enteredHeightIsValid}
-                cancelImport = {this.cancelImport.bind(this)}
-                cancelConfirmation = {this.cancelConfirmation.bind(this)}
-                forceWait = {this.state.isAwaitingWalletVerification}
-                transactionStatusMessage = {this.state.transactionStatusMessage}
-              />} />
-              <Route path="/backup" render={() => <Save_Phrase_Page 
-        	omit_buttons = {true} 
-                text = {this.state.walletPhrase}
-              />} />
-              <Route path="/deposit" render={() => <Deposit
-                depositQrCode = {this.state.depositQrCode}
-                walletAddress = {this.walletAddress}
-                
-                xmrWasDeposited = {!this.state.isAwaitingDeposit}
-
-                setCurrentSitePage = {this.setCurrentSitePage.bind(this)}
-              />} />
-              <Route path="/sign_out" render={(props) => <SignOut
-                {...props}
-              />} />
-              <Route path="/withdraw" render={(props) => <Withdraw 
-        	//submitWithdrawInfo = {this.setWithdrawAddressAndAmount.bind(this)}
-                //resetWithdrawPage = {this.resetWithdrawPage.bind(this)}
-                //withdrawInfo = {this.state.currentWithdrawInfo}
-                availableBalance = {this.state.availableBalance}
-                totalBalance = {this.state.balance}
-                wallet = {this.wallet}
-                isGeneratingTxs = {this.state.isGeneratingTxs}
-              />} />
-              <Route component={default_page} />
+              <Route exact path="/">
+                <Home
+                  generateWallet={this.generateWallet.bind(this)}
+                  confirmWallet={this.confirmWallet.bind(this)}
+                  restoreWallet={this.restoreWallet.bind(this)}
+                  setEnteredPhrase={this.setEnteredPhrase.bind(this)}
+                  logout={this.logout.bind(this)}
+                  walletSyncProgress = {this.state.walletSyncProgress}
+                  setRestoreHeight = {this.setRestoreHeight.bind(this)}
+                  walletPhrase = {this.state.walletPhrase}
+                  currentHomePage = {this.state.currentHomePage}
+                  balance = {this.state.balance}
+                  setCurrentHomePage = {this.setCurrentHomePage.bind(this)}
+                  setCurrentSitePage = {this.setCurrentSitePage.bind(this)}
+                  lastHomePage = {this.lastHomePage}
+                  availableBalance = {this.state.availableBalance}
+                  confirmAbortWalletSynchronization = {this.confirmAbortWalletSynchronization.bind(this)}
+                  coreModuleLoaded = {this.state.coreModuleLoaded}
+                  keysModuleLoaded = {this.state.keysModuleLoaded}
+                  isGeneratingTxs = {this.state.isGeneratingTxs}
+                  startGeneratingTxs = {this.startGeneratingTxs.bind(this)}
+                  stopGeneratingTxs = {this.stopGeneratingTxs.bind(this)}
+                  transactionsGenerated = {this.state.transactionsGenerated}
+                  totalFees = {this.state.totalFees}
+                  createDateConversionWallet = {this.createDateConversionWallet.bind(this)}
+                  enteredMnemonicIsValid = {this.state.enteredMnemonicIsValid}
+                  enteredHeightIsValid = {this.state.enteredHeightIsValid}
+                  cancelImport = {this.cancelImport.bind(this)}
+                  cancelConfirmation = {this.cancelConfirmation.bind(this)}
+                  forceWait = {this.state.isAwaitingWalletVerification}
+                  transactionStatusMessage = {this.state.transactionStatusMessage}
+                />
+              </Route>
+              <Route path="/backup"> 
+                {this.state.currentSitePage != "Backup" ? <Redirect to="/" /> : <Save_Phrase_Page 
+        	  omit_buttons = {true} 
+                  text = {this.state.walletPhrase}
+                  verificationUrl = {this.state.currentSitePage}
+                />}
+              </Route>
+              <Route path="/deposit">
+                {this.state.currentSitePage != "Deposit" ? <Redirect to="/" /> : <Deposit
+                  depositQrCode = {this.state.depositQrCode}
+                  walletAddress = {this.walletAddress}
+                  xmrWasDeposited = {!this.state.isAwaitingDeposit}
+                  setCurrentSitePage = {this.setCurrentSitePage.bind(this)}
+                  verificationUrl = {this.state.currentSitePage}
+                />}
+              </Route>
+              <Route path="/withdraw">
+        	{this.state.currentSitePage != "Withdraw" ? <Redirect to="/" /> : <Withdraw
+                    availableBalance = {this.state.availableBalance}
+                    totalBalance = {this.state.balance}
+                    wallet = {this.wallet}
+                    isGeneratingTxs = {this.state.isGeneratingTxs}
+                  />
+        	}
+              </Route>
+              <Route>
+                <Redirect to="/" />
+              </Route>
             </Switch>
           </Router>
         </div>
