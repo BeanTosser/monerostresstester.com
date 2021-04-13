@@ -93,7 +93,11 @@ let configStressTester = Object.assign({}, configBase, {
   entry: "./src/main/index.js",
   output: {
     path: path.resolve(__dirname, "browser_build"),
-    filename: "stress_tester.dist.js"
+    filename: "stress_tester.dist.js",
+    publicPath: '/'
+  },
+  devServer: {
+    historyApiFallback: true
   }
 });
 
