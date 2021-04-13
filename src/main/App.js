@@ -13,8 +13,8 @@ import {Notification_Bar, Loading_Animation, getLoadingAnimationFile} from "./co
 import QR_Code from "./components/QR_Code.js";
 import qrcode from './qrcode.js';
 
-import {HashRouter as Router, Link, Route, Switch, Redirect} from 'react-router-dom';
-//import { BrowserRouter as Link, NavLink } from "react-router-dom";
+import {Router, Link, Route, Switch, Redirect} from 'react-router-dom';
+import history from './history';
 import MoneroTxGenerator from './MoneroTxGenerator.js';
 import MoneroTxGeneratorListener from './MoneroTxGeneratorListener.js';
 
@@ -67,17 +67,7 @@ class App extends React.Component {
     
     // print current version of monero-javascript
     
-    /*
-     * Member Variables
-     * No need to store these in state since no components need to re-render when their values are set
-     */
-    this.txGenerator = null;
-    this.walletAddress = "empty";
-    this.wallet = null;
-    this.enteredText = "";
-    this.restoreHeight = 0;
-    this.lastHomePage = "";
-    this.animationIsLoaded = false;
+
  
     // In order to pass "this" into the nested functions...
     let that = this;
@@ -137,6 +127,19 @@ class App extends React.Component {
       transactionStatusMessage: "",
       currentSitePage: "/"
     };
+    
+    /*
+     * Member Variables
+     * No need to store these in state since no components need to re-render when their values are set
+     */
+    this.txGenerator = null;
+    this.walletAddress = "empty";
+    this.wallet = null;
+    this.enteredText = "";
+    this.restoreHeight = 0;
+    this.lastHomePage = "";
+    this.animationIsLoaded = false;
+    this.browserHistory = [];
 	    
     this.state = this.initialState;
   }
@@ -483,6 +486,7 @@ async generateWallet(){
     this.enteredWithdrawAmountIsValid = true;
     this.enteredWithdrawAddressIsValid = true;
     this.withdrawTransaction = null;
+    this.browserHistory = [];
   }
   
   delimitEnteredWalletPhrase(){
@@ -641,6 +645,8 @@ async generateWallet(){
   }
   
   render(){
+    
+    console.log("history.location: " + JSON.stringify(history.location));
     let notificationBar = null;
     
     if(this.state.walletIsSynced && !(this.state.balance > 0) && this.state.currentSitePage != "/deposit"){
@@ -663,7 +669,7 @@ async generateWallet(){
     if(this.animationIsLoaded){
       return(
         <div id="app_container">
-          <Router>
+          <Router history={history}>
             <Banner 
               walletIsSynced={this.state.walletIsSynced}
               flexLogo = {this.state.flexLogo}
