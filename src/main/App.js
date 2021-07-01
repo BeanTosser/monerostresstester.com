@@ -46,7 +46,7 @@ const FUNDED_WALLET_MINIMUM_BALANCE = 0.000000000001;
 const WALLET_INFO = {
     password: "supersecretpassword123",
     networkType: "stagenet",
-    serverUri: "http://165.227.75.147:80/",
+    serverUri: "http://165.227.75.147:80",
 }
 
 class App extends React.Component {
@@ -147,7 +147,7 @@ class App extends React.Component {
     this.dateRestoreWalletPromise = monerojs.createWalletFull({
       password: "supersecretpassword123",
       networkType: "stagenet",
-      serverUri: "http://165.227.75.147:80/",
+      serverUri: "http://165.227.75.147:80",
     });
 
   }
